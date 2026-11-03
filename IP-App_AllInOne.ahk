@@ -1,6 +1,3 @@
-﻿; Eigenständige All-in-One-Ausgabe von IP-App.ahk.
-; Die modularen Quelldateien bleiben separat im Projekt erhalten.
-
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
@@ -8,8 +5,7 @@
 ; unabhängig davon, von wo aus das Script gestartet wurde.
 SetWorkingDir A_ScriptDir
 
-
-; ===== Eingebunden aus: Gemeinsam.ahk =====
+; --- Beginn: Gemeinsam.ahk ---
 ; Gemeinsame Bibliotheken, Datenlisten und globale Einstellungen.
 
 ;Socket-Klasse einbinden
@@ -44190,12 +44186,8 @@ CancelConsoleCaptureAsync(job) {
     if FileExist(job.CommandFile)
         try FileDelete(job.CommandFile)
 }
-
-
-; ===== Ende: Gemeinsam.ahk =====
-
-
-; ===== Eingebunden aus: Tab_Netzwerkkarten.ahk =====
+; --- Ende: Gemeinsam.ahk ---
+; --- Beginn: Tab_Netzwerkkarten.ahk ---
 ; Profil-, Notiz- und Netzwerkkarten-Daten liegen im Benutzerzweig der Registry.
 ReadAppData() {
     try {
@@ -44879,12 +44871,8 @@ createDbIfNotExist() {
     }
 }
 ; --- Funktion zum Verbinden von Arrayelementen ---
-
-
-; ===== Ende: Tab_Netzwerkkarten.ahk =====
-
-
-; ===== Eingebunden aus: Tab_Oeffentliche_IP.ahk =====
+; --- Ende: Tab_Netzwerkkarten.ahk ---
+; --- Beginn: Tab_Oeffentliche_IP.ahk ---
 ; Logik für den Reiter „Öffentliche IP“.
 GetÖffentlicheIP(*) {
     global EditExterneIP, EditLand, EditRegion, EditStadt, EditPLZ, EditISP
@@ -44927,12 +44915,8 @@ GetÖffentlicheIP(*) {
 
     }
 }
-
-
-; ===== Ende: Tab_Oeffentliche_IP.ahk =====
-
-
-; ===== Eingebunden aus: Tab_Erreichbarkeit.ahk =====
+; --- Ende: Tab_Oeffentliche_IP.ahk ---
+; --- Beginn: Tab_Erreichbarkeit.ahk ---
 ; Logik für den Reiter „Erreichbarkeit“.
 BtnInsertZielClick(*) {
     global frmIP, frmGateway, frmDNS, EditZiel, chbDHCP, chbSubnetz, frmSubnetz, frmVLAN, btnSaveNotiz
@@ -45049,15 +45033,10 @@ pingButtonFunktion(*) {
     }
     Run "cmd /k ping -t " . ziel . ""
 }
-
-
-; ===== Ende: Tab_Erreichbarkeit.ahk =====
-
-
-; ===== Eingebunden aus: Tab_Tools.ahk =====
+; --- Ende: Tab_Erreichbarkeit.ahk ---
+; --- Beginn: Tab_Tools.ahk ---
 ; Logik und Hilfsfenster für den Reiter „Tools“.
-
-; ===== Eingebunden aus: tools\Tool_FensterHelfer.ahk =====
+; --- Beginn: Tool_FensterHelfer.ahk ---
 ; Gemeinsame Positionierung der Tool-Fenster.
 
 setWindowPos(window) {
@@ -45083,6 +45062,18 @@ ApplyLightAppTheme(window, fontSize := 10) {
     window.SetFont("s" fontSize " c182230", "Segoe UI")
 }
 
+SetToolWaitAnimation(control, running, interval := 55) {
+    if !IsObject(control)
+        return
+    if running {
+        control.Visible := true
+        DllCall("SendMessageW", "Ptr", control.Hwnd, "UInt", 0x40A, "Ptr", 1, "Ptr", interval, "Ptr")
+    } else {
+        DllCall("SendMessageW", "Ptr", control.Hwnd, "UInt", 0x40A, "Ptr", 0, "Ptr", 0, "Ptr")
+        control.Visible := false
+    }
+}
+
 
 CenterModernEdit(control, lineHeight := 20) {
     clientRect := Buffer(16, 0)
@@ -45100,12 +45091,8 @@ CenterModernEdit(control, lineHeight := 20) {
     NumPut("Int", top + lineHeight, clientRect, 12)
     DllCall("SendMessageW", "Ptr", control.Hwnd, "UInt", 0xB3, "Ptr", 0, "Ptr", clientRect.Ptr, "Ptr")
 }
-
-
-; ===== Ende: tools\Tool_FensterHelfer.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_FirmwareHelfer.ahk =====
+; --- Ende: Tool_FensterHelfer.ahk ---
+; --- Beginn: Tool_FirmwareHelfer.ahk ---
 ; Gemeinsame Helfer zum Lesen der Dateigröße aus Apache-Verzeichnislisten.
 
 FirmwareParseIndexSizes(html) {
@@ -45265,12 +45252,8 @@ FirmwareFormatSizeMB(byteCount) {
     sizeMB := byteCount / 1048576
     return StrReplace(Format("{:.2f}", sizeMB), ".", ",") " MB"
 }
-
-
-; ===== Ende: tools\Tool_FirmwareHelfer.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_Speedtest.ahk =====
+; --- Ende: Tool_FirmwareHelfer.ahk ---
+; --- Beginn: Tool_Speedtest.ahk ---
 ; Netzwerk-Tool: Speedtest-Auswahl.
 
 global zieleIsOpen := false
@@ -45309,12 +45292,8 @@ global zieleIsOpen := false
 }
 
 
-
-
-; ===== Ende: tools\Tool_Speedtest.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_PortErreichbarkeit.ahk =====
+; --- Ende: Tool_Speedtest.ahk ---
+; --- Beginn: Tool_PortErreichbarkeit.ahk ---
 ; Netzwerk-Tool: Erreichbarkeit eines Ports prüfen.
 
 global portGuiIsOpen := false
@@ -45583,11 +45562,8 @@ scanPortErreichbarkeit() {
 
     }
 }
-
-; ===== Ende: tools\Tool_PortErreichbarkeit.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_IPScanner.ahk =====
+; --- Ende: Tool_PortErreichbarkeit.ahk ---
+; --- Beginn: Tool_IPScanner.ahk ---
 ; Netzwerk-Tool: IP-Scanner.
 
 global ipScannerIsOpen := false
@@ -45603,9 +45579,10 @@ global ipScanDonePath := ""
 global ipScanScriptPath := ""
 global ipScanStartTick := 0
 global ipScanLastContent := ""
+global ipScanProgress := 0
 
 öffneIPScanner(*) {
-    global zeitLabel, chkboxUnify, inputIP, inputFilter, ipScanIPs, ipScanMacs, ipScanVendors, ipScanHostnames, LV, lv_shown, btnOK, ipAdress, ipScannerIsOpen
+    global zeitLabel, chkboxUnify, inputIP, inputFilter, ipScanIPs, ipScanMacs, ipScanVendors, ipScanHostnames, LV, lv_shown, btnOK, ipAdress, ipScannerIsOpen, ipScanProgress
 
     if (!ipScannerIsOpen) {
         ipScannerIsOpen := true
@@ -45649,6 +45626,7 @@ global ipScanLastContent := ""
 
         IPScannerGui.SetFont("s9 c65748B", "Segoe UI")
         IPScannerGui.Add("Text", "x24 y542 w500 h20", "Rechtsklick auf ein Gerät öffnet Aktionen und Kopieroptionen.")
+        ipScanProgress := IPScannerGui.Add("Progress", "x24 y535 w732 h5 Hidden +0x8", 0)
         IPScannerGui.SetFont("s10 bold", "Segoe UI")
         btnOK := IPScannerGui.Add("Button", "x604 y112 w152 h42 Default", "Scannen")
         btnOK.SetFont("s10 bold", "Segoe UI")
@@ -45698,10 +45676,11 @@ global ipScanLastContent := ""
         }
 
         CloseIPScanner(*) {
-            global ipScanProcessId, ipScanResultPath, ipScanDonePath, ipScanScriptPath
+            global ipScanProcessId, ipScanResultPath, ipScanDonePath, ipScanScriptPath, ipScanProgress
             lv_shown := false
             ipScannerIsOpen := false
             SetTimer(IPScannerPoll, 0)
+            SetToolWaitAnimation(ipScanProgress, false)
             if (ipScanProcessId && ProcessExist(ipScanProcessId)) {
                 try ProcessClose(ipScanProcessId)
             }
@@ -45744,7 +45723,7 @@ global ipScanLastContent := ""
         showLv(*) {
             global lv_shown, LV, ipScanIPs, ipScanMacs, ipScanVendors, ipScanHostnames, inputIP, btnOK
             global ipAdress, inputFilter, zeitLabel
-            global ipScanProcessId, ipScanResultPath, ipScanDonePath, ipScanStartTick, ipScanLastContent
+            global ipScanProcessId, ipScanResultPath, ipScanDonePath, ipScanStartTick, ipScanLastContent, ipScanProgress
 
             regex := "^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){2}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$"
             ipAdress := Trim(inputIP.Value)
@@ -45763,6 +45742,7 @@ global ipScanLastContent := ""
             zeitLabel.Text := "Suche läuft ... 0 Geräte gefunden"
             btnOK.Text := "Suche läuft ..."
             btnOK.Enabled := false
+            SetToolWaitAnimation(ipScanProgress, true)
 
             suffix := DllCall("GetCurrentProcessId") "_" A_TickCount
             ipScanScriptPath := A_Temp "\ip-app-scan-" suffix ".ps1"
@@ -45862,6 +45842,7 @@ global ipScanLastContent := ""
             } catch Error as e {
                 btnOK.Text := "Scannen"
                 btnOK.Enabled := true
+                SetToolWaitAnimation(ipScanProgress, false)
                 zeitLabel.Text := "Scan konnte nicht gestartet werden"
                 MsgBox("IP-Scan konnte nicht gestartet werden:`n" e.Message)
                 if FileExist(ipScanScriptPath)
@@ -45922,7 +45903,7 @@ CenterIPScannerField(control, lineHeight := 20) {
 }
 IPScannerPoll(*) {
     global ipScannerIsOpen, ipScanProcessId, ipScanResultPath, ipScanDonePath, ipScanScriptPath, ipScanStartTick, ipScanLastContent
-    global ipScanIPs, ipScanMacs, ipScanVendors, ipScanHostnames, LV, inputFilter, zeitLabel, btnOK
+    global ipScanIPs, ipScanMacs, ipScanVendors, ipScanHostnames, LV, inputFilter, zeitLabel, btnOK, ipScanProgress
 
     if (!ipScannerIsOpen) {
         SetTimer(IPScannerPoll, 0)
@@ -45990,6 +45971,7 @@ IPScannerPoll(*) {
     }
 
     SetTimer(IPScannerPoll, 0)
+    SetToolWaitAnimation(ipScanProgress, false)
     btnOK.Text := "Scannen"
     btnOK.Enabled := true
     ipScanProcessId := 0
@@ -46032,12 +46014,8 @@ findIPScannerManufacturer(macAddress) {
 
 
 
-
-
-; ===== Ende: tools\Tool_IPScanner.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_DNSAbfrage.ahk =====
+; --- Ende: Tool_IPScanner.ahk ---
+; --- Beginn: Tool_DNSAbfrage.ahk ---
 ; Netzwerk-Tool: DNS-Abfrage (ANY).
 
 global dnsTesterIsOpen := false
@@ -46262,12 +46240,8 @@ StartDNSQuery(*) {
 }
 
 
-
-
-; ===== Ende: tools\Tool_DNSAbfrage.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_Verbindungsmonitor.ahk =====
+; --- Ende: Tool_DNSAbfrage.ahk ---
+; --- Beginn: Tool_Verbindungsmonitor.ahk ---
 ; Netzwerk-Tool: Verbindungsmonitor.
 
 global QuickFilterList := ["established", "listen", "bound", "timewait", "0.0.0.0", "::"]
@@ -46560,12 +46534,8 @@ MenuHandler(ItemName, ItemPos, MySubMenu) {
 
 ; --- Ende FUNKTIONEN NetworkMonitorGui ---
 
-
-
-; ===== Ende: tools\Tool_Verbindungsmonitor.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_PortScanner.ahk =====
+; --- Ende: Tool_Verbindungsmonitor.ahk ---
+; --- Beginn: Tool_PortScanner.ahk ---
 ; Netzwerk-Tool: Port-Scanner.
 
 global portScannerGuiIsOpen := false
@@ -46931,12 +46901,8 @@ class PortScanner {
 
 
 ;--------Ende Port Scanner--------------
-
-
-; ===== Ende: tools\Tool_PortScanner.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_NaptrSrvScanner.ahk =====
+; --- Ende: Tool_PortScanner.ahk ---
+; --- Beginn: Tool_NaptrSrvScanner.ahk ---
 ; Netzwerk-Tool: NAPTR- und SRV-DNS-Scanner.
 
 global naptrDnsGuiIsOpen := false
@@ -47274,12 +47240,8 @@ StopAnimation(GuiObj) {
 
 
 
-
-
-; ===== Ende: tools\Tool_NaptrSrvScanner.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_SubnetzRechner.ahk =====
+; --- Ende: Tool_NaptrSrvScanner.ahk ---
+; --- Beginn: Tool_SubnetzRechner.ahk ---
 ; Netzwerk-Tool: IPv4-Subnetz-Rechner.
 
 global subnetCalcGuiIsOpen := false
@@ -47309,41 +47271,41 @@ global subnetCalcStatus
     ApplyLightAppTheme(subnetCalcGui, 10)
 
 
-    subnetCalcGui.SetFont("s19 bold c182230", "Segoe UI")
-    subnetCalcGui.Add("Text", "x24 y18 w600 h34 +0x200", "Subnetz-Rechner")
-    subnetCalcGui.SetFont("s10 c65748B", "Segoe UI")
-    subnetCalcGui.Add("Text", "x26 y54 w620 h22 +0x200", "Berechnet Netzadresse, Broadcast, Hostbereich und Scan-Range.")
+    subnetCalcGui.SetFont("s17 bold c182230", "Segoe UI")
+    subnetCalcGui.Add("Text", "x20 y14 w620 h30 +0x200", "Subnetz-Rechner")
+    subnetCalcGui.SetFont("s9 c65748B", "Segoe UI")
+    subnetCalcGui.Add("Text", "x22 y44 w620 h18 +0x200", "Netzadresse, Broadcast, Hostbereich und Scan-Range auf einen Blick.")
 
     subnetCalcGui.SetFont("s10 bold c344054", "Segoe UI")
-    subnetCalcGui.Add("Text", "x24 y100 w370 h20 +0x200", "IPv4-Adresse")
-    subnetCalcGui.Add("Text", "x420 y100 w90 h20 +0x200", "Präfix / CIDR")
-    subnetCalcGui.SetFont("s11", "Segoe UI")
-    subnetCalcIPInput := subnetCalcGui.Add("Edit", "x24 y124 w370 h36 Multi -VScroll -Wrap", defaultIP)
-    subnetCalcPrefixInput := subnetCalcGui.Add("Edit", "x420 y124 w90 h36 Number Multi -VScroll -Wrap", defaultPrefix)
+    subnetCalcGui.Add("Text", "x20 y76 w330 h18 +0x200", "IPv4-Adresse")
+    subnetCalcGui.Add("Text", "x368 y76 w88 h18 +0x200", "Präfix / CIDR")
+    subnetCalcGui.SetFont("s10", "Segoe UI")
+    subnetCalcIPInput := subnetCalcGui.Add("Edit", "x20 y97 w330 h32 Multi -VScroll -Wrap", defaultIP)
+    subnetCalcPrefixInput := subnetCalcGui.Add("Edit", "x368 y97 w88 h32 Number Multi -VScroll -Wrap", defaultPrefix)
     subnetCalcPrefixSpinner := subnetCalcGui.Add("UpDown", "Range0-32", defaultPrefix)
     subnetCalcPrefixInput.OnEvent("Change", UpdateSubnetCalculation)
     subnetCalcPrefixSpinner.OnEvent("Change", UpdateSubnetCalculation)
 
     subnetCalcGui.SetFont("s10 bold", "Segoe UI")
-    calculateButton := subnetCalcGui.Add("Button", "x530 y121 w126 h42 Default", "Berechnen")
+    calculateButton := subnetCalcGui.Add("Button", "x474 y97 w126 h34 Default", "Berechnen")
     calculateButton.OnEvent("Click", CalculateSubnet)
 
     subnetCalcGui.SetFont("s10 bold c344054", "Segoe UI")
-    subnetCalcGui.Add("Text", "x24 y184 w400 h22 +0x200", "Ergebnisübersicht")
+    subnetCalcGui.Add("Text", "x20 y146 w400 h20 +0x200", "Ergebnisübersicht")
     subnetCalcResults := []
     resultLabels := ["CIDR-Netz", "Netzadresse", "Subnetzmaske", "Broadcast-Adresse", "Hostbereich", "Nutzbare Hosts", "Scan-Range"]
     loop resultLabels.Length
-        subnetCalcResults.Push(SubnetCalcAddResultRow(subnetCalcGui, 210 + (A_Index - 1) * 49, resultLabels[A_Index], A_Index))
+        subnetCalcResults.Push(SubnetCalcAddResultRow(subnetCalcGui, 171 + (A_Index - 1) * 36, resultLabels[A_Index], A_Index))
 
     subnetCalcGui.SetFont("s9 c65748B", "Segoe UI")
-    subnetCalcGui.Add("Text", "x24 y573 w500 h32 +0x200", "Bei /31 und /32 werden alle Adressen als nutzbare Hosts behandelt.")
-    subnetCalcStatus := subnetCalcGui.Add("Text", "x24 y613 w500 h20 +0x200", "")
+    subnetCalcGui.Add("Text", "x20 y437 w440 h18 +0x200", "Bei /31 und /32 gelten alle Adressen als nutzbare Hosts.")
+    subnetCalcStatus := subnetCalcGui.Add("Text", "x20 y462 w430 h18 +0x200", "")
     subnetCalcGui.SetFont("s10 bold", "Segoe UI")
-    copyRangeButton := subnetCalcGui.Add("Button", "x550 y600 w186 h40", "Scan-Range kopieren")
+    copyRangeButton := subnetCalcGui.Add("Button", "x474 y451 w166 h34", "Scan-Range kopieren")
     copyRangeButton.OnEvent("Click", CopySubnetScanRange)
 
     subnetCalcGui.OnEvent("Close", CloseSubnetCalculator)
-    subnetCalcGui.Show("w760 h660")
+    subnetCalcGui.Show("w660 h510")
     CenterSubnetCalcField(subnetCalcIPInput, 20)
     CenterSubnetCalcField(subnetCalcPrefixInput, 20)
     subnetCalcGui.Move(setWindowPos(subnetCalcGui), getWindowInfo(MeineGui).y)
@@ -47412,27 +47374,15 @@ UpdateSubnetCalculation(*) {
     CalculateSubnet()
 }
 SubnetCalcAddResultRow(targetGui, y, label, index) {
-    isEmphasized := (index = 1 || index = 5 || index = 7)
-    if (isEmphasized)
-        rowColor := "E4EEFF"
-    else if (Mod(index, 2) = 0)
-        rowColor := "EDF2F8"
-    else
-        rowColor := "FFFFFF"
+    rowColor := Mod(index, 2) ? "FFFFFF" : "F0F4F8"
+    targetGui.Add("Text", "x20 y" y " w620 h32 Background" rowColor)
 
-    targetGui.Add("Text", "x24 y" y " w712 h42 Background" rowColor)
-    if (isEmphasized)
-        targetGui.Add("Text", "x24 y" y " w4 h42 Background3B82F6")
+    targetGui.SetFont("s9 bold c475467", "Segoe UI")
+    targetGui.Add("Text", "x30 y" y " w190 h32 +0x200 Background" rowColor, label)
 
-    labelColor := isEmphasized ? "c1D4ED8" : "c667085"
-    targetGui.SetFont("s10 bold " labelColor, "Segoe UI")
-    targetGui.Add("Text", "x42 y" y " w220 h42 +0x200", label)
-
-    if (isEmphasized)
-        targetGui.SetFont("s12 bold c173B75", "Segoe UI")
-    else
-        targetGui.SetFont("s11 c182230", "Segoe UI")
-    return targetGui.Add("Text", "x280 y" y " w438 h42 +0x200", "—")
+    valueFont := (index = 1 || index = 5 || index = 7) ? "s10 bold c1849A9" : "s10 bold c182230"
+    targetGui.SetFont(valueFont, "Segoe UI")
+    return targetGui.Add("Text", "x230 y" y " w398 h32 +0x200 Background" rowColor, "—")
 }
 SubnetCalcIsIPv4(address) {
     regex := "^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$"
@@ -47520,12 +47470,8 @@ CloseSubnetCalculator(*) {
 
 
 
-
-
-; ===== Ende: tools\Tool_SubnetzRechner.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_PasswortGenerator.ahk =====
+; --- Ende: Tool_SubnetzRechner.ahk ---
+; --- Beginn: Tool_PasswortGenerator.ahk ---
 ; Netzwerk-Tool: kryptografisch sicherer Passwortgenerator.
 
 global passwortGeneratorGeoeffnet := false
@@ -47686,12 +47632,8 @@ KopierePasswort(*) {
     ToolTip("Passwort in die Zwischenablage kopiert.")
     SetTimer(() => ToolTip(), -1500)
 }
-
-
-; ===== Ende: tools\Tool_PasswortGenerator.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_FritzBoxDownloader.ahk =====
+; --- Ende: Tool_PasswortGenerator.ahk ---
+; --- Beginn: Tool_FritzBoxDownloader.ahk ---
 ; FRITZ!Box-Firmware aus dem offiziellen AVM-Verzeichnis anzeigen und laden.
 
 global fritzBoxDownloaderOpen := false
@@ -47720,11 +47662,12 @@ global fritzBoxDownloadStatusPath := ""
 global fritzBoxDownloadPartialPath := ""
 global fritzBoxDownloadTargetPath := ""
 global fritzBoxDownloadFileName := ""
+global fritzBoxProgress
 
 öffneFritzBoxDownloader(*) {
     global MeineGui, fritzBoxDownloaderOpen, fritzBoxDownloaderGui
     global fritzBoxDeviceList, fritzBoxSearchEdit, fritzBoxContentList, fritzBoxPathText
-    global fritzBoxTargetEdit, fritzBoxStatusText, fritzBoxDownloadButton
+    global fritzBoxTargetEdit, fritzBoxStatusText, fritzBoxDownloadButton, fritzBoxProgress
     global fritzBoxTargetFolder
 
     if fritzBoxDownloaderOpen {
@@ -47772,6 +47715,7 @@ global fritzBoxDownloadFileName := ""
     fritzBoxDownloadButton := fritzBoxDownloaderGui.Add("Button", "x724 y588 w152 h36 Disabled", "Herunterladen")
     fritzBoxDownloadButton.SetFont("s10 bold", "Segoe UI")
     fritzBoxDownloadButton.OnEvent("Click", FritzBoxDownloadSelected)
+    fritzBoxProgress := fritzBoxDownloaderGui.Add("Progress", "x294 y628 w582 h5 Hidden +0x8", 0)
 
     fritzBoxDownloaderGui.OnEvent("Close", FritzBoxDownloaderClose)
     fritzBoxDownloaderGui.Show("w900 h640")
@@ -47791,9 +47735,10 @@ FritzBoxClearSearch(*) {
 FritzBoxLoadModels(*) {
     global fritzBoxDeviceList, fritzBoxDeviceEntries, fritzBoxVisibleDeviceEntries, fritzBoxStatusText
     global fritzBoxContentList, fritzBoxFileEntries, fritzBoxScanFolders, fritzBoxDownloadButton
-    global fritzBoxCurrentModelLabel, fritzBoxPathText, fritzBoxScanGeneration
+    global fritzBoxCurrentModelLabel, fritzBoxPathText, fritzBoxScanGeneration, fritzBoxProgress
 
     SetTimer(FritzBoxScanNextFolder, 0)
+    SetToolWaitAnimation(fritzBoxProgress, false)
     fritzBoxScanGeneration += 1
     fritzBoxDeviceList.Delete()
     fritzBoxContentList.Delete()
@@ -47825,9 +47770,10 @@ FritzBoxLoadModels(*) {
 FritzBoxApplyModelFilter(*) {
     global fritzBoxSearchEdit, fritzBoxDeviceList, fritzBoxDeviceEntries, fritzBoxVisibleDeviceEntries
     global fritzBoxContentList, fritzBoxFileEntries, fritzBoxScanFolders, fritzBoxDownloadButton
-    global fritzBoxCurrentModelLabel, fritzBoxPathText, fritzBoxStatusText, fritzBoxScanGeneration
+    global fritzBoxCurrentModelLabel, fritzBoxPathText, fritzBoxStatusText, fritzBoxScanGeneration, fritzBoxProgress
 
     SetTimer(FritzBoxScanNextFolder, 0)
+    SetToolWaitAnimation(fritzBoxProgress, false)
     fritzBoxScanGeneration += 1
     fritzBoxScanFolders := []
     fritzBoxDeviceList.Delete()
@@ -47866,7 +47812,7 @@ FritzBoxLoadModelFiles(model) {
     global fritzBoxScanFolders, fritzBoxVisitedFolders, fritzBoxFileEntries
     global fritzBoxCurrentModelLabel, fritzBoxPathText, fritzBoxStatusText
     global fritzBoxContentList, fritzBoxDownloadButton, fritzBoxScanFolderCount, fritzBoxScanErrorCount
-    global fritzBoxScanGeneration
+    global fritzBoxScanGeneration, fritzBoxProgress
 
     SetTimer(FritzBoxScanNextFolder, 0)
     fritzBoxScanGeneration += 1
@@ -47881,13 +47827,14 @@ FritzBoxLoadModelFiles(model) {
     fritzBoxDownloadButton.Enabled := false
     fritzBoxPathText.Text := model.Label " — Dateien aus allen Unterordnern"
     fritzBoxStatusText.Text := "Durchsuche die AVM-Ordner für " model.Label " …"
+    SetToolWaitAnimation(fritzBoxProgress, true)
     SetTimer(FritzBoxScanNextFolder, -10)
 }
 
 FritzBoxScanNextFolder(*) {
     global fritzBoxDownloaderOpen, fritzBoxScanFolders, fritzBoxVisitedFolders, fritzBoxFileEntries
     global fritzBoxCurrentModelLabel, fritzBoxScanFolderCount, fritzBoxScanErrorCount
-    global fritzBoxContentList, fritzBoxStatusText, fritzBoxScanGeneration
+    global fritzBoxContentList, fritzBoxStatusText, fritzBoxScanGeneration, fritzBoxProgress
     generation := fritzBoxScanGeneration
 
     if !fritzBoxDownloaderOpen
@@ -47897,6 +47844,7 @@ FritzBoxScanNextFolder(*) {
 
     if (fritzBoxScanFolders.Length = 0) {
         SetTimer(FritzBoxScanNextFolder, 0)
+        SetToolWaitAnimation(fritzBoxProgress, false)
         fritzBoxStatusText.Text := fritzBoxFileEntries.Length " Dateien in " fritzBoxScanFolderCount " Ordnern gefunden."
         if (fritzBoxScanErrorCount > 0)
             fritzBoxStatusText.Text .= " " fritzBoxScanErrorCount " Ordner konnten nicht gelesen werden."
@@ -47992,7 +47940,7 @@ FritzBoxDownloadSelected(*) {
     global fritzBoxContentList, fritzBoxFileEntries, fritzBoxTargetFolder
     global fritzBoxStatusText, fritzBoxDownloadActive, fritzBoxDownloadScriptPath
     global fritzBoxDownloadStatusPath, fritzBoxDownloadPartialPath, fritzBoxDownloadTargetPath
-    global fritzBoxDownloadFileName, fritzBoxDownloadPid
+    global fritzBoxDownloadFileName, fritzBoxDownloadPid, fritzBoxProgress
 
     if fritzBoxDownloadActive
         return
@@ -48042,12 +47990,14 @@ FritzBoxDownloadSelected(*) {
     try {
         FileAppend(psScript, fritzBoxDownloadScriptPath, "UTF-8")
         fritzBoxDownloadActive := true
+        SetToolWaitAnimation(fritzBoxProgress, true)
         fritzBoxStatusText.Text := "Download wird gestartet: " fileName
         Run('powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' fritzBoxDownloadScriptPath '"', , "Hide", &fritzBoxDownloadPid)
         SetTimer(FritzBoxPollDownload, 500)
     } catch Error as e {
         fritzBoxDownloadActive := false
         fritzBoxDownloadPid := 0
+        SetToolWaitAnimation(fritzBoxProgress, false)
         fritzBoxStatusText.Text := "Downloadstart fehlgeschlagen: " e.Message
     }
 }
@@ -48055,7 +48005,7 @@ FritzBoxDownloadSelected(*) {
 FritzBoxPollDownload(*) {
     global fritzBoxDownloadActive, fritzBoxDownloadPid, fritzBoxDownloadStatusPath
     global fritzBoxDownloadPartialPath, fritzBoxDownloadScriptPath, fritzBoxDownloadFileName
-    global fritzBoxDownloadTargetPath, fritzBoxStatusText
+    global fritzBoxDownloadTargetPath, fritzBoxStatusText, fritzBoxProgress
 
     if !fritzBoxDownloadActive {
         SetTimer(FritzBoxPollDownload, 0)
@@ -48075,6 +48025,7 @@ FritzBoxPollDownload(*) {
         fritzBoxDownloadActive := false
         fritzBoxDownloadPid := 0
         SetTimer(FritzBoxPollDownload, 0)
+        SetToolWaitAnimation(fritzBoxProgress, false)
         if downloadSucceeded
             FritzBoxShowDownloadComplete(fritzBoxDownloadFileName, fritzBoxDownloadTargetPath)
         return
@@ -48132,12 +48083,13 @@ FritzBoxCleanupDownloadFiles() {
 
 FritzBoxDownloaderClose(*) {
     global fritzBoxDownloaderOpen, fritzBoxDownloadActive, fritzBoxDownloadPid
-    global fritzBoxDownloaderGui, fritzBoxScanGeneration
+    global fritzBoxDownloaderGui, fritzBoxScanGeneration, fritzBoxProgress
 
     fritzBoxDownloaderOpen := false
     SetTimer(FritzBoxPollDownload, 0)
     SetTimer(FritzBoxScanNextFolder, 0)
     fritzBoxScanGeneration += 1
+    SetToolWaitAnimation(fritzBoxProgress, false)
     if (fritzBoxDownloadActive && fritzBoxDownloadPid && ProcessExist(fritzBoxDownloadPid)) {
         try ProcessClose(fritzBoxDownloadPid)
     }
@@ -48206,12 +48158,8 @@ FritzBoxGetDownloadsFolder() {
         return fallbackPath
     return A_MyDocuments
 }
-
-
-; ===== Ende: tools\Tool_FritzBoxDownloader.ahk =====
-
-
-; ===== Eingebunden aus: tools\Tool_LancomDownloader.ahk =====
+; --- Ende: Tool_FritzBoxDownloader.ahk ---
+; --- Beginn: Tool_LancomDownloader.ahk ---
 ; LANCOM-Firmware aus dem offiziellen LANCOM FTP-Verzeichnis anzeigen und laden.
 
 global lancomDownloaderOpen := false
@@ -48242,11 +48190,12 @@ global lancomDownloadStatusPath := ""
 global lancomDownloadPartialPath := ""
 global lancomDownloadTargetPath := ""
 global lancomDownloadFileName := ""
+global lancomProgress
 
 öffneLancomDownloader(*) {
     global MeineGui, lancomDownloaderOpen, lancomDownloaderGui
     global lancomChannelList, lancomDeviceList, lancomSearchEdit, lancomContentList, lancomPathText
-    global lancomTargetEdit, lancomStatusText, lancomDownloadButton
+    global lancomTargetEdit, lancomStatusText, lancomDownloadButton, lancomProgress
     global lancomTargetFolder
 
     if lancomDownloaderOpen {
@@ -48299,6 +48248,7 @@ global lancomDownloadFileName := ""
     lancomDownloadButton := lancomDownloaderGui.Add("Button", "x724 y588 w152 h36 Disabled", "Herunterladen")
     lancomDownloadButton.SetFont("s10 bold", "Segoe UI")
     lancomDownloadButton.OnEvent("Click", LancomDownloadSelected)
+    lancomProgress := lancomDownloaderGui.Add("Progress", "x294 y628 w582 h5 Hidden +0x8", 0)
 
     lancomDownloaderGui.OnEvent("Close", LancomDownloaderClose)
     lancomDownloaderGui.Show("w900 h640")
@@ -48378,13 +48328,14 @@ LancomLoadModels(*) {
 LancomLoadDevices(*) {
     global lancomChannelList, lancomChannelEntries, lancomDeviceEntries, lancomVisibleDeviceEntries
     global lancomDeviceList, lancomContentList, lancomFileEntries, lancomScanFolders
-    global lancomDownloadButton, lancomCurrentModelLabel, lancomPathText, lancomStatusText, lancomScanGeneration
+    global lancomDownloadButton, lancomCurrentModelLabel, lancomPathText, lancomStatusText, lancomScanGeneration, lancomProgress
 
     channelIndex := lancomChannelList.Value
     if (channelIndex < 1 || channelIndex > lancomChannelEntries.Length)
         return
 
     SetTimer(LancomScanNextFolder, 0)
+    SetToolWaitAnimation(lancomProgress, false)
     lancomScanGeneration += 1
     lancomDeviceList.Delete()
     lancomContentList.Delete()
@@ -48414,9 +48365,10 @@ LancomLoadDevices(*) {
 LancomApplyModelFilter(*) {
     global lancomSearchEdit, lancomDeviceList, lancomDeviceEntries, lancomVisibleDeviceEntries
     global lancomContentList, lancomFileEntries, lancomScanFolders, lancomDownloadButton
-    global lancomCurrentModelLabel, lancomPathText, lancomStatusText, lancomScanGeneration
+    global lancomCurrentModelLabel, lancomPathText, lancomStatusText, lancomScanGeneration, lancomProgress
 
     SetTimer(LancomScanNextFolder, 0)
+    SetToolWaitAnimation(lancomProgress, false)
     lancomScanGeneration += 1
     lancomScanFolders := []
     lancomDeviceList.Delete()
@@ -48455,7 +48407,7 @@ LancomLoadModelFiles(model) {
     global lancomScanFolders, lancomVisitedFolders, lancomFileEntries
     global lancomCurrentModelLabel, lancomPathText, lancomStatusText
     global lancomContentList, lancomDownloadButton, lancomScanFolderCount, lancomScanErrorCount
-    global lancomScanGeneration
+    global lancomScanGeneration, lancomProgress
 
     SetTimer(LancomScanNextFolder, 0)
     lancomScanGeneration += 1
@@ -48470,13 +48422,14 @@ LancomLoadModelFiles(model) {
     lancomDownloadButton.Enabled := false
     lancomPathText.Text := model.Label " — Dateien aus allen Unterordnern"
     lancomStatusText.Text := "Durchsuche die LANCOM FTP-Ordner für " model.Label " …"
+    SetToolWaitAnimation(lancomProgress, true)
     SetTimer(LancomScanNextFolder, -10)
 }
 
 LancomScanNextFolder(*) {
     global lancomDownloaderOpen, lancomScanFolders, lancomVisitedFolders, lancomFileEntries
     global lancomCurrentModelLabel, lancomScanFolderCount, lancomScanErrorCount
-    global lancomContentList, lancomStatusText, lancomScanGeneration
+    global lancomContentList, lancomStatusText, lancomScanGeneration, lancomProgress
     generation := lancomScanGeneration
 
     if !lancomDownloaderOpen
@@ -48486,6 +48439,7 @@ LancomScanNextFolder(*) {
 
     if (lancomScanFolders.Length = 0) {
         SetTimer(LancomScanNextFolder, 0)
+        SetToolWaitAnimation(lancomProgress, false)
         LancomRenderFileEntries()
         lancomStatusText.Text := lancomFileEntries.Length " Dateien in " lancomScanFolderCount " Ordnern gefunden."
         if (lancomScanErrorCount > 0)
@@ -48612,7 +48566,7 @@ LancomDownloadSelected(*) {
     global lancomContentList, lancomFileEntries, lancomTargetFolder
     global lancomStatusText, lancomDownloadActive, lancomDownloadScriptPath
     global lancomDownloadStatusPath, lancomDownloadPartialPath, lancomDownloadTargetPath
-    global lancomDownloadFileName, lancomDownloadPid
+    global lancomDownloadFileName, lancomDownloadPid, lancomProgress
 
     if lancomDownloadActive
         return
@@ -48662,12 +48616,14 @@ LancomDownloadSelected(*) {
     try {
         FileAppend(psScript, lancomDownloadScriptPath, "UTF-8")
         lancomDownloadActive := true
+        SetToolWaitAnimation(lancomProgress, true)
         lancomStatusText.Text := "Download wird gestartet: " fileName
         Run('powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "' lancomDownloadScriptPath '"', , "Hide", &lancomDownloadPid)
         SetTimer(LancomPollDownload, 500)
     } catch Error as e {
         lancomDownloadActive := false
         lancomDownloadPid := 0
+        SetToolWaitAnimation(lancomProgress, false)
         lancomStatusText.Text := "Downloadstart fehlgeschlagen: " e.Message
     }
 }
@@ -48675,7 +48631,7 @@ LancomDownloadSelected(*) {
 LancomPollDownload(*) {
     global lancomDownloadActive, lancomDownloadPid, lancomDownloadStatusPath
     global lancomDownloadPartialPath, lancomDownloadScriptPath, lancomDownloadFileName
-    global lancomDownloadTargetPath, lancomStatusText
+    global lancomDownloadTargetPath, lancomStatusText, lancomProgress
 
     if !lancomDownloadActive {
         SetTimer(LancomPollDownload, 0)
@@ -48695,6 +48651,7 @@ LancomPollDownload(*) {
         lancomDownloadActive := false
         lancomDownloadPid := 0
         SetTimer(LancomPollDownload, 0)
+        SetToolWaitAnimation(lancomProgress, false)
         if downloadSucceeded
             LancomShowDownloadComplete(lancomDownloadFileName, lancomDownloadTargetPath)
         return
@@ -48717,6 +48674,7 @@ LancomPollDownload(*) {
         lancomDownloadActive := false
         lancomDownloadPid := 0
         SetTimer(LancomPollDownload, 0)
+        SetToolWaitAnimation(lancomProgress, false)
     }
 }
 
@@ -48752,12 +48710,13 @@ LancomCleanupDownloadFiles() {
 
 LancomDownloaderClose(*) {
     global lancomDownloaderOpen, lancomDownloadActive, lancomDownloadPid
-    global lancomDownloaderGui, lancomScanGeneration
+    global lancomDownloaderGui, lancomScanGeneration, lancomProgress
 
     lancomDownloaderOpen := false
     SetTimer(LancomPollDownload, 0)
     SetTimer(LancomScanNextFolder, 0)
     lancomScanGeneration += 1
+    SetToolWaitAnimation(lancomProgress, false)
     if (lancomDownloadActive && lancomDownloadPid && ProcessExist(lancomDownloadPid)) {
         try ProcessClose(lancomDownloadPid)
     }
@@ -48826,10 +48785,1057 @@ LancomGetDownloadsFolder() {
         return fallbackPath
     return A_MyDocuments
 }
+; --- Ende: Tool_LancomDownloader.ahk ---
+; --- Beginn: Tool_WlanQrCode.ahk ---
+; Netzwerk-Tool: WLAN-Zugangsdaten lokal mit der eingebetteten QR-JavaScript-Bibliothek
+; erzeugen. Die WebBrowser-Seite ist eine lokale HTML-Datei und verwendet kein Internet.
 
+global wlanQrGeoeffnet := false
+global wlanQrSsidEdit, wlanQrPasswortEdit, wlanQrVerschluesselung, wlanQrGroesse, wlanQrStatus
+global wlanQrBrowserControl, wlanQrBrowser, wlanQrTempFile := "", wlanQrQueuedData := ""
+global wlanQrBrowserReady := false, wlanQrDatenGueltig := false
 
-; ===== Ende: tools\Tool_LancomDownloader.ahk =====
+öffneWlanQrCode(*) {
+    global MeineGui
+    global wlanQrGeoeffnet, wlanQrSsidEdit, wlanQrPasswortEdit, wlanQrVerschluesselung
+    global wlanQrGroesse, wlanQrStatus, wlanQrBrowserControl, wlanQrBrowser, wlanQrTempFile, wlanQrBrowserReady
 
+    if wlanQrGeoeffnet
+        return
+    wlanQrGeoeffnet := true
+    wlanQrBrowserReady := false
+
+    qrGui := Gui(, "WLAN-QR-Code")
+    ApplyLightAppTheme(qrGui, 10)
+
+    qrGui.SetFont("s17 bold c182230", "Segoe UI")
+    qrGui.Add("Text", "x22 y16 w455 h34 +0x200", "WLAN-Zugang als QR-Code")
+    qrGui.SetFont("s9 c65748B", "Segoe UI")
+    qrGui.Add("Text", "x24 y52 w455 h22 +0x200", "Der Code wird offline auf diesem Computer erstellt.")
+
+    qrGui.SetFont("s10 bold c344054", "Segoe UI")
+    qrGui.Add("Text", "x24 y88 w180 h22 +0x200", "Netzwerkname (SSID)")
+    qrGui.SetFont("s10", "Segoe UI")
+    wlanQrSsidEdit := qrGui.Add("Edit", "x24 y112 w270 h34 Multi -VScroll -Wrap", "")
+    wlanQrSsidEdit.OnEvent("Change", AktualisiereWlanQr)
+
+    qrGui.SetFont("s10 bold c344054", "Segoe UI")
+    qrGui.Add("Text", "x24 y159 w180 h22 +0x200", "Passwort")
+    qrGui.SetFont("s10", "Segoe UI")
+    wlanQrPasswortEdit := qrGui.Add("Edit", "x24 y183 w270 h34 Multi -VScroll -Wrap", "")
+    wlanQrPasswortEdit.OnEvent("Change", AktualisiereWlanQr)
+
+    qrGui.SetFont("s10 bold c344054", "Segoe UI")
+    qrGui.Add("Text", "x24 y230 w190 h22 +0x200", "Verschlüsselung")
+    qrGui.SetFont("s10", "Segoe UI")
+    wlanQrVerschluesselung := qrGui.Add("DropDownList", "x24 y254 w270 r3 Choose1", ["WPA / WPA2", "WEP", "Offen (ohne Passwort)"])
+    wlanQrVerschluesselung.OnEvent("Change", AktualisiereWlanQr)
+
+    qrGui.SetFont("s10 bold c344054", "Segoe UI")
+    qrGui.Add("Text", "x326 y88 w170 h22 Center +0x200", "Vorschau")
+    wlanQrBrowserControl := qrGui.Add("ActiveX", "x314 y116 w196 h196", "Shell.Explorer")
+    wlanQrBrowser := wlanQrBrowserControl.Value
+    try wlanQrBrowser.Silent := true
+
+    qrGui.SetFont("s9 c65748B", "Segoe UI")
+    wlanQrStatus := qrGui.Add("Text", "x24 y316 w491 h24 +0x200", "SSID und Passwort eingeben.")
+    qrGui.SetFont("s9 bold c344054", "Segoe UI")
+    qrGui.Add("Text", "x310 y347 w48 h28 +0x200", "PNG:")
+    qrGui.SetFont("s9", "Segoe UI")
+    wlanQrGroesse := qrGui.Add("DropDownList", "x350 y349 w78 h24 r3 Choose2", ["256 px", "512 px", "1024 px"])
+    speichernBtn := qrGui.Add("Button", "x433 y347 w82 h28", "Speichern")
+    speichernBtn.OnEvent("Click", SpeichereWlanQrPng)
+
+    qrGui.OnEvent("Close", SchliesseWlanQrCode)
+    qrGui.OnEvent("Escape", SchliesseWlanQrCode)
+    qrGui.Show("w530 h390")
+    qrGui.Move(setWindowPos(qrGui), getWindowInfo(MeineGui).y)
+    CenterModernEdit(wlanQrSsidEdit, 22)
+    CenterModernEdit(wlanQrPasswortEdit, 22)
+
+    wlanQrTempFile := A_Temp "\NetworkTools_WLAN_QR.html"
+    WlanQrWriteHtml("")
+    wlanQrBrowser.Navigate(WlanQrPathToFileUrl(wlanQrTempFile))
+    SetTimer(WlanQrBrowserLoaded, 100)
+}
+
+SchliesseWlanQrCode(*) {
+    global wlanQrGeoeffnet, wlanQrBrowser, wlanQrTempFile, wlanQrBrowserReady
+    wlanQrGeoeffnet := false
+    wlanQrBrowserReady := false
+    SetTimer(WlanQrBrowserLoaded, 0)
+    try wlanQrBrowser.Navigate("about:blank")
+    SetTimer(WlanQrDeleteTempFile, -500)
+}
+
+WlanQrDeleteTempFile() {
+    global wlanQrTempFile
+    if (wlanQrTempFile != "")
+        try FileDelete(wlanQrTempFile)
+}
+
+AktualisiereWlanQr(*) {
+    global wlanQrSsidEdit, wlanQrPasswortEdit, wlanQrVerschluesselung, wlanQrStatus
+    global wlanQrQueuedData, wlanQrDatenGueltig, wlanQrBrowserReady
+
+    ssid := wlanQrSsidEdit.Value
+    passwort := wlanQrPasswortEdit.Value
+    typ := wlanQrVerschluesselung.Value = 2 ? "WEP" : (wlanQrVerschluesselung.Value = 3 ? "nopass" : "WPA")
+
+    if (ssid = "") {
+        wlanQrDatenGueltig := false
+        wlanQrQueuedData := ""
+        wlanQrStatus.Text := "Bitte den Netzwerknamen (SSID) eingeben."
+        if wlanQrBrowserReady
+            WlanQrSetPageData("")
+        return
+    }
+    if (typ != "nopass" && passwort = "") {
+        wlanQrDatenGueltig := false
+        wlanQrQueuedData := ""
+        wlanQrStatus.Text := "Bitte das WLAN-Passwort eingeben."
+        if wlanQrBrowserReady
+            WlanQrSetPageData("")
+        return
+    }
+
+    wifi := "WIFI:T:" typ ";S:" WlanQrEscapeField(ssid) ";"
+    if (typ != "nopass")
+        wifi .= "P:" WlanQrEscapeField(passwort) ";"
+    wifi .= ";"
+
+    wlanQrDatenGueltig := true
+    wlanQrQueuedData := wifi
+    wlanQrStatus.Text := "QR-Code aktualisiert. Die Zugangsdaten werden nicht übertragen."
+    if wlanQrBrowserReady
+        WlanQrSetPageData(wifi)
+}
+
+WlanQrBrowserLoaded() {
+    global wlanQrGeoeffnet, wlanQrBrowser, wlanQrBrowserReady, wlanQrQueuedData, wlanQrDatenGueltig
+    if !wlanQrGeoeffnet {
+        SetTimer(WlanQrBrowserLoaded, 0)
+        return
+    }
+    try {
+        if (wlanQrBrowser.ReadyState = 4) {
+            wlanQrBrowser.Document.parentWindow.execScript("window.__wlanQrReady = (typeof window.setWlanQrData === 'function');", "JScript")
+            if wlanQrBrowser.Document.parentWindow.__wlanQrReady {
+                SetTimer(WlanQrBrowserLoaded, 0)
+                wlanQrBrowserReady := true
+                WlanQrSetPageData(wlanQrQueuedData)
+                return
+            }
+        }
+    } catch {
+    }
+    SetTimer(WlanQrBrowserLoaded, -100)
+}
+
+WlanQrSetPageData(wifi) {
+    global wlanQrBrowser, wlanQrStatus
+    try {
+        js := "window.setWlanQrData('" WlanQrJsEscape(wifi) "');"
+        wlanQrBrowser.Document.parentWindow.execScript(js, "JScript")
+    } catch as err {
+        wlanQrStatus.Text := "QR-Erzeugung fehlgeschlagen (Zeile " err.Line "). " err.Message
+    }
+}
+
+SpeichereWlanQrPng(*) {
+    global wlanQrGroesse, wlanQrBrowser, wlanQrBrowserReady, wlanQrDatenGueltig, wlanQrStatus
+    if !wlanQrDatenGueltig {
+        wlanQrStatus.Text := "Bitte erst gültige WLAN-Daten eingeben."
+        return
+    }
+    if !wlanQrBrowserReady {
+        wlanQrStatus.Text := "QR-Code wird noch vorbereitet. Bitte kurz warten."
+        return
+    }
+
+    groessen := [256, 512, 1024]
+    pixel := groessen[wlanQrGroesse.Value]
+    ziel := EnvGet("USERPROFILE") "\Downloads\WLAN-QR-Code-" pixel "px.png"
+    datei := FileSelect("S16", ziel, "WLAN-QR-Code als PNG speichern", "PNG-Bild (*.png)")
+    if (datei = "")
+        return
+    if (StrLower(SubStr(datei, -4)) != ".png")
+        datei .= ".png"
+
+    try {
+        wlanQrBrowser.Document.parentWindow.execScript("window.dlResult = renderToDataUrl(" pixel ");", "JScript")
+        dataUrl := "" wlanQrBrowser.Document.parentWindow.dlResult
+        if (SubStr(dataUrl, 1, 14) != "data:image/png")
+            throw Error("Der Browser hat keine PNG-Daten geliefert.")
+        komma := InStr(dataUrl, ",")
+        if !komma
+            throw Error("Die PNG-Bilddaten sind ungültig.")
+        bild := WlanQrDecodeBase64(SubStr(dataUrl, komma + 1))
+        dateiObj := FileOpen(datei, "w")
+        if !IsObject(dateiObj)
+            throw Error("Die Zieldatei konnte nicht geöffnet werden.")
+        dateiObj.RawWrite(bild)
+        dateiObj.Close()
+        antwort := MsgBox(
+            "PNG-Datei (" pixel " px) wurde erstellt unter:`n`n" datei "`n`nMöchten Sie den Ordner öffnen und die Datei markieren?",
+            "WLAN-QR-Code gespeichert",
+            "YesNo Iconi"
+        )
+        if (antwort = "Yes")
+            Run('explorer.exe /select,"' datei '"')
+        wlanQrStatus.Text := "PNG gespeichert (" pixel " px): " datei
+    } catch as err {
+        wlanQrStatus.Text := "PNG-Export fehlgeschlagen (Zeile " err.Line "). " err.Message
+    }
+}
+
+WlanQrWriteHtml(data) {
+    global WlanQrHtmlTemplate, wlanQrTempFile
+    html := StrReplace(WlanQrHtmlTemplate, "##DATA##", WlanQrJsEscape(data))
+    try FileDelete(wlanQrTempFile)
+    FileAppend(html, wlanQrTempFile, "UTF-8")
+}
+
+WlanQrEscapeField(value) {
+    value := StrReplace(value, "\", "\\")
+    value := StrReplace(value, ";", "\;")
+    value := StrReplace(value, ",", "\,")
+    value := StrReplace(value, ":", "\:")
+    return StrReplace(value, "`"", "\`"")
+}
+
+WlanQrJsEscape(value) {
+    value := StrReplace(value, "\", "\\")
+    value := StrReplace(value, "'", "\'")
+    value := StrReplace(value, "`"", "\`"")
+    value := StrReplace(value, "`n", "\n")
+    return StrReplace(value, "`r", "\r")
+}
+
+WlanQrDecodeBase64(value) {
+    size := 0
+    if !DllCall("Crypt32\CryptStringToBinaryW", "Str", value, "UInt", 0, "UInt", 1, "Ptr", 0, "UInt*", &size, "Ptr", 0, "Ptr", 0)
+        throw Error("PNG-Größe konnte nicht ermittelt werden.")
+    imageData := Buffer(size)
+    if !DllCall("Crypt32\CryptStringToBinaryW", "Str", value, "UInt", 0, "UInt", 1, "Ptr", imageData.Ptr, "UInt*", &size, "Ptr", 0, "Ptr", 0)
+        throw Error("PNG-Daten konnten nicht dekodiert werden.")
+    return imageData
+}
+
+WlanQrPathToFileUrl(path) {
+    result := "file:///"
+    normalized := StrReplace(path, "\", "/")
+    for _, character in StrSplit(normalized) {
+        code := Ord(character)
+        if ((code >= 0x30 && code <= 0x39) || (code >= 0x41 && code <= 0x5A)
+            || (code >= 0x61 && code <= 0x7A) || character = "/" || character = "-"
+            || character = "_" || character = "." || character = "~" || character = ":") {
+            result .= character
+        } else {
+            encoded := Buffer(4)
+            count := StrPut(character, encoded, "UTF-8") - 1
+            loop count
+                result .= Format("%{:02X}", NumGet(encoded, A_Index - 1, "UChar"))
+        }
+    }
+    return result
+}
+
+WlanQrHtmlTemplate := "
+(
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset='UTF-8'>
+    <title>WiFi QR-Code</title>
+    <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      -ms-overflow-style: none;
+      background: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .center {
+      display: table;
+      width: 100%;
+      height: 100%;
+    }
+    .center-inner {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+    #qr {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .err {
+      color: #c00;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 8px;
+    }
+    </style>
+    </head>
+    <body>
+    <div class='center'>
+      <div class='center-inner'>
+        <canvas id='qr'></canvas>
+        <div id='err' class='err'></div>
+      </div>
+    </div>
+    <script>
+    window.onerror = function(msg, url, line) {
+      var el = document.getElementById('err');
+      if (el) el.innerHTML = 'JS-Fehler: ' + msg + ' (Zeile ' + line + ')';
+      return false;
+    };
+    var QR = (function() {
+      function zeros(n) { var a = new Array(n); for (var i = 0; i < n; i++) a[i] = 0; return a; }
+      function falses(n) { var a = new Array(n); for (var i = 0; i < n; i++) a[i] = false; return a; }
+    
+      var EXP = new Array(512), LOG = new Array(256);
+      for (var i = 0, x = 1; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11D; }
+      for (var i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+      function mul(a, b) { return (a && b) ? EXP[LOG[a] + LOG[b]] : 0; }
+    
+      function rsGen(n) {
+        var g = [1];
+        for (var i = 0; i < n; i++) {
+          var ng = zeros(g.length + 1);
+          for (var j = 0; j < g.length; j++) {
+            ng[j]   ^= g[j];
+            ng[j+1] ^= mul(g[j], EXP[i]);
+          }
+          g = ng;
+        }
+        return g;
+      }
+      function rsEnc(data, n) {
+        var g = rsGen(n), res = data.concat(zeros(n));
+        for (var i = 0; i < data.length; i++) {
+          var c = res[i];
+          if (c) for (var j = 1; j < g.length; j++) res[i+j] ^= mul(g[j], c);
+        }
+        return res.slice(data.length);
+      }
+    
+      var V = [null,
+        {ec:10, bl:[[1,16]], al:[]},
+        {ec:16, bl:[[1,28]], al:[6,18]},
+        {ec:26, bl:[[1,44]], al:[6,22]},
+        {ec:18, bl:[[2,32]], al:[6,26]},
+        {ec:24, bl:[[2,43]], al:[6,30]},
+        {ec:16, bl:[[4,27]], al:[6,34]},
+        {ec:18, bl:[[4,31]], al:[6,22,38]},
+        {ec:22, bl:[[2,38],[2,39]], al:[6,24,42]},
+        {ec:22, bl:[[3,36],[2,37]], al:[6,26,46]},
+        {ec:26, bl:[[4,43],[1,44]], al:[6,28,50]}
+      ];
+      function dataCap(v) {
+        var c = 0;
+        for (var i = 0; i < V[v].bl.length; i++) c += V[v].bl[i][0] * V[v].bl[i][1];
+        return c;
+      }
+      function chooseVer(n) {
+        for (var v = 1; v <= 10; v++) {
+          var cb = v <= 9 ? 8 : 16;
+          if (4 + cb + n * 8 <= dataCap(v) * 8) return v;
+        }
+        return -1;
+      }
+      function encodeData(bytes, v) {
+        var cb = v <= 9 ? 8 : 16, cap = dataCap(v), bits = [];
+        function put(val, len) { for (var i = len - 1; i >= 0; i--) bits.push((val >> i) & 1); }
+        put(4, 4); put(bytes.length, cb);
+        for (var i = 0; i < bytes.length; i++) put(bytes[i], 8);
+        for (var i = 0; i < 4 && bits.length < cap * 8; i++) bits.push(0);
+        while (bits.length % 8) bits.push(0);
+        var pad = [0xEC, 0x11], pi = 0;
+        while (bits.length < cap * 8) put(pad[pi++ % 2], 8);
+        var data = [];
+        for (var i = 0; i < bits.length; i += 8) {
+          var b = 0;
+          for (var j = 0; j < 8; j++) b = (b << 1) | bits[i+j];
+          data.push(b);
+        }
+        return data;
+      }
+      function buildCW(data, v) {
+        var info = V[v], blocks = [], idx = 0;
+        for (var g = 0; g < info.bl.length; g++)
+          for (var b = 0; b < info.bl[g][0]; b++) {
+            var dlen = info.bl[g][1], d = data.slice(idx, idx + dlen);
+            idx += dlen;
+            blocks.push({ d: d, e: rsEnc(d, info.ec) });
+          }
+        var result = [], maxD = 0;
+        for (var i = 0; i < blocks.length; i++) maxD = Math.max(maxD, blocks[i].d.length);
+        for (var i = 0; i < maxD; i++)
+          for (var b = 0; b < blocks.length; b++)
+            if (i < blocks[b].d.length) result.push(blocks[b].d[i]);
+        for (var i = 0; i < info.ec; i++)
+          for (var b = 0; b < blocks.length; b++) result.push(blocks[b].e[i]);
+        return result;
+      }
+      function makeMat(v) {
+        var size = v * 4 + 17, m = [], f = [];
+        for (var i = 0; i < size; i++) { m.push(zeros(size)); f.push(falses(size)); }
+        function finder(r, c) {
+          for (var i = -1; i <= 7; i++) for (var j = -1; j <= 7; j++) {
+            var rr = r + i, cc = c + j;
+            if (rr < 0 || rr >= size || cc < 0 || cc >= size) continue;
+            var val = 0;
+            if (i >= 0 && i <= 6 && j >= 0 && j <= 6)
+              val = (i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4)) ? 1 : 0;
+            m[rr][cc] = val; f[rr][cc] = true;
+          }
+        }
+        finder(0,0); finder(0,size-7); finder(size-7,0);
+        for (var i = 8; i < size - 8; i++) {
+          m[6][i] = (i%2===0) ? 1 : 0; f[6][i] = true;
+          m[i][6] = (i%2===0) ? 1 : 0; f[i][6] = true;
+        }
+        var al = V[v].al;
+        for (var a = 0; a < al.length; a++) for (var b = 0; b < al.length; b++) {
+          var r = al[a], c = al[b];
+          if (f[r][c]) continue;
+          for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) {
+            var val = (Math.abs(dr)===2||Math.abs(dc)===2||(dr===0&&dc===0)) ? 1 : 0;
+            m[r+dr][c+dc] = val; f[r+dr][c+dc] = true;
+          }
+        }
+        m[size-8][8] = 1; f[size-8][8] = true;
+        var fp  = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[7,8],[8,8],
+                   [size-7,8],[size-6,8],[size-5,8],[size-4,8],[size-3,8],[size-2,8],[size-1,8]];
+        var fp2 = [[8,size-1],[8,size-2],[8,size-3],[8,size-4],[8,size-5],[8,size-6],[8,size-7],[8,size-8],
+                   [8,7],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0]];
+        for (var i = 0; i < 15; i++) { f[fp[i][0]][fp[i][1]] = true; f[fp2[i][0]][fp2[i][1]] = true; }
+        return { m: m, f: f, size: size, fp: fp, fp2: fp2 };
+      }
+      function placeData(mat, cw) {
+        var m = mat.m, f = mat.f, size = mat.size, bitIdx = 0, total = cw.length * 8, up = true;
+        for (var col = size - 1; col >= 1; col -= 2) {
+          if (col === 6) col = 5;
+          for (var i = 0; i < size; i++) {
+            var row = up ? size - 1 - i : i;
+            for (var c = 0; c < 2; c++) {
+              var cc = col - c;
+              if (f[row][cc]) continue;
+              var bit = 0;
+              if (bitIdx < total) { bit = (cw[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1; bitIdx++; }
+              m[row][cc] = bit;
+            }
+          }
+          up = !up;
+        }
+      }
+      function maskFn(k, i, j) {
+        switch (k) {
+          case 0: return (i+j) % 2 === 0;
+          case 1: return i % 2 === 0;
+          case 2: return j % 3 === 0;
+          case 3: return (i+j) % 3 === 0;
+          case 4: return (Math.floor(i/2) + Math.floor(j/3)) % 2 === 0;
+          case 5: return ((i*j) % 2 + (i*j) % 3) === 0;
+          case 6: return (((i*j) % 2 + (i*j) % 3) % 2) === 0;
+          case 7: return (((i+j) % 2 + (i*j) % 3) % 2) === 0;
+        }
+      }
+      function applyMask(mat, k) {
+        var m = mat.m, f = mat.f, size = mat.size;
+        for (var i = 0; i < size; i++) for (var j = 0; j < size; j++)
+          if (!f[i][j] && maskFn(k, i, j)) m[i][j] ^= 1;
+      }
+      function penalty(m) {
+        var size = m.length, p = 0;
+        for (var i = 0; i < size; i++) {
+          var rC = 1, cC = 1;
+          for (var j = 1; j < size; j++) {
+            if (m[i][j] === m[i][j-1]) rC++; else { if (rC >= 5) p += rC - 2; rC = 1; }
+            if (m[j][i] === m[j-1][i]) cC++; else { if (cC >= 5) p += cC - 2; cC = 1; }
+          }
+          if (rC >= 5) p += rC - 2;
+          if (cC >= 5) p += cC - 2;
+        }
+        for (var i = 0; i < size - 1; i++) for (var j = 0; j < size - 1; j++)
+          if (m[i][j] === m[i][j+1] && m[i][j] === m[i+1][j] && m[i][j] === m[i+1][j+1]) p += 3;
+        for (var i = 0; i < size; i++) for (var j = 0; j < size - 10; j++) {
+          if (m[i][j]&&!m[i][j+1]&&m[i][j+2]&&m[i][j+3]&&m[i][j+4]&&!m[i][j+5]&&m[i][j+6]&&!m[i][j+7]&&!m[i][j+8]&&!m[i][j+9]&&!m[i][j+10]) p += 40;
+          if (!m[i][j]&&!m[i][j+1]&&!m[i][j+2]&&!m[i][j+3]&&m[i][j+4]&&!m[i][j+5]&&m[i][j+6]&&m[i][j+7]&&m[i][j+8]&&!m[i][j+9]&&m[i][j+10]) p += 40;
+          if (m[j][i]&&!m[j+1][i]&&m[j+2][i]&&m[j+3][i]&&m[j+4][i]&&!m[j+5][i]&&m[j+6][i]&&!m[j+7][i]&&!m[j+8][i]&&!m[j+9][i]&&!m[j+10][i]) p += 40;
+          if (!m[j][i]&&!m[j+1][i]&&!m[j+2][i]&&!m[j+3][i]&&m[j+4][i]&&!m[j+5][i]&&m[j+6][i]&&m[j+7][i]&&m[j+8][i]&&!m[j+9][i]&&m[j+10][i]) p += 40;
+        }
+        var dark = 0;
+        for (var i = 0; i < size; i++) for (var j = 0; j < size; j++) if (m[i][j]) dark++;
+        p += Math.floor(Math.abs(dark * 100 / (size * size) - 50) / 5) * 10;
+        return p;
+      }
+      function fmtBits(mask) {
+        var data = mask, rem = data << 10;
+        for (var i = 14; i >= 10; i--) if (rem & (1 << i)) rem ^= 0x537 << (i - 10);
+        return ((data << 10) | rem) ^ 0x5412;
+      }
+      function placeFmt(mat, mask) {
+        var fmt = fmtBits(mask), m = mat.m;
+        for (var i = 0; i < 15; i++) {
+          var bit = (fmt >> i) & 1;
+          m[mat.fp[i][0]][mat.fp[i][1]] = bit;
+          m[mat.fp2[i][0]][mat.fp2[i][1]] = bit;
+        }
+      }
+      function strToBytes(text) {
+        var s = unescape(encodeURIComponent(text));
+        var bytes = [];
+        for (var i = 0; i < s.length; i++) bytes.push(s.charCodeAt(i));
+        return bytes;
+      }
+      function generate(text) {
+        var bytes = strToBytes(text);
+        var v = chooseVer(bytes.length);
+        if (v < 0) return null;
+        var data = encodeData(bytes, v), cw = buildCW(data, v);
+        var mat = makeMat(v);
+        placeData(mat, cw);
+        var best = null, bestP = Infinity;
+        for (var k = 0; k < 8; k++) {
+          var t = {
+            m: (function(arr){ var r=[]; for(var x=0;x<arr.length;x++) r.push(arr[x].slice()); return r; })(mat.m),
+            f: mat.f, size: mat.size, fp: mat.fp, fp2: mat.fp2
+          };
+          applyMask(t, k); placeFmt(t, k);
+          var p = penalty(t.m);
+          if (p < bestP) { bestP = p; best = t; }
+        }
+        return best.m;
+      }
+      return { generate: generate };
+    })();
+    
+    var qrMatrix = null;
+    var qrMargin = 4;
+    window.dlResult = '';
+    
+    function layoutCanvas() {
+      if (!qrMatrix) return;
+      var canvas = document.getElementById('qr');
+      var pad = 12;
+      var availW = document.documentElement.clientWidth  - pad * 2;
+      var availH = document.documentElement.clientHeight - pad * 2;
+      if (availW < 40) availW = 40;
+      if (availH < 40) availH = 40;
+      var avail = availW < availH ? availW : availH;
+    
+      var size = qrMatrix.length;
+      var total = size + qrMargin * 2;
+      var cell = Math.floor(avail / total);
+      if (cell < 2) cell = 2;
+      var cs = cell * total;
+    
+      canvas.width = cs;
+      canvas.height = cs;
+      canvas.style.width = cs + 'px';
+      canvas.style.height = cs + 'px';
+    
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, cs, cs);
+      ctx.fillStyle = '#000000';
+      for (var i = 0; i < size; i++)
+        for (var j = 0; j < size; j++)
+          if (qrMatrix[i][j])
+            ctx.fillRect((j + qrMargin) * cell, (i + qrMargin) * cell, cell, cell);
+    }
+    
+    window.onresize = layoutCanvas;
+    
+    window.setWlanQrData = function(text) {
+      var canvas = document.getElementById('qr');
+      var err = document.getElementById('err');
+      if (!text) {
+        qrMatrix = null;
+        canvas.style.display = 'none';
+        err.innerHTML = '';
+        return;
+      }
+      qrMatrix = QR.generate(text);
+      if (!qrMatrix) {
+        canvas.style.display = 'none';
+        err.innerHTML = 'Inhalt zu lang fuer QR-Code.';
+        return;
+      }
+      canvas.style.display = 'inline-block';
+      err.innerHTML = '';
+      layoutCanvas();
+    };
+    window.setWlanQrData('##DATA##');
+    
+    function renderToDataUrl(targetPx) {
+      if (!qrMatrix) return '';
+      var size = qrMatrix.length;
+      var total = size + qrMargin * 2;
+      var c = document.createElement('canvas');
+      c.width = targetPx; c.height = targetPx;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, targetPx, targetPx);
+      ctx.fillStyle = '#000000';
+      var cell = targetPx / total;
+      for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+          if (qrMatrix[i][j]) {
+            var x0 = Math.round((j + qrMargin) * cell);
+            var y0 = Math.round((i + qrMargin) * cell);
+            var x1 = Math.round((j + qrMargin + 1) * cell);
+            var y1 = Math.round((i + qrMargin + 1) * cell);
+            ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+          }
+        }
+      }
+      return c.toDataURL('image/png');
+    }
+    </script>
+    </body>
+    </html>
+)"
+; --- Ende: Tool_WlanQrCode.ahk ---
+; --- Beginn: Tool_Whois.ahk ---
+; Netzwerk-Tool: WHOIS-Abfrage per TCP/43 ohne Konsolenfenster.
+
+global whoisToolOpen := false
+global whoisGui, whoisQueryEdit, whoisStatusText, whoisSummaryList, whoisRawEdit, whoisProgress
+global whoisSocket := 0, whoisSocketChunks := [], whoisTimeoutCallback := 0
+global whoisQueryValue := "", whoisQueryKind := "", whoisCurrentServer := ""
+global whoisQueryStage := 0, whoisQueryGeneration := 0, whoisBusy := false, whoisResponseBytes := 0
+global whoisLastDataTick := 0
+
+öffneWhois(*) {
+    global MeineGui, whoisToolOpen, whoisGui, whoisQueryEdit, whoisStatusText
+    global whoisSummaryList, whoisRawEdit, whoisProgress, pingZiele
+
+    if whoisToolOpen {
+        try WinActivate("ahk_id " whoisGui.Hwnd)
+        return
+    }
+    whoisToolOpen := true
+    whoisGui := Gui(, "WHOIS-Abfrage")
+    ApplyLightAppTheme(whoisGui, 10)
+
+    whoisGui.SetFont("s18 bold c182230", "Segoe UI")
+    whoisGui.Add("Text", "x24 y18 w660 h34 +0x200", "WHOIS-Abfrage")
+    whoisGui.SetFont("s10 c65748B", "Segoe UI")
+    whoisGui.Add("Text", "x26 y54 w660 h22 +0x200", "Registrierungs- und Netzwerkinformationen zu Domains und IP-Adressen abrufen.")
+
+    whoisGui.SetFont("s10 bold c344054", "Segoe UI")
+    whoisGui.Add("GroupBox", "x20 y86 w680 h102", "Abfrage")
+    whoisGui.Add("Text", "x34 y108 w130 h22 +0x200", "Domain oder IP")
+    whoisGui.SetFont("s10", "Segoe UI")
+    whoisTargets := []
+    seenWhoisTargets := Map()
+    for target in pingZiele {
+        targetValue := IsObject(target) ? target[1] : target
+        targetValue := Trim(targetValue)
+        targetKey := StrLower(targetValue)
+        if (targetValue != "" && !seenWhoisTargets.Has(targetKey)) {
+            whoisTargets.Push(targetValue)
+            seenWhoisTargets[targetKey] := true
+        }
+    }
+    whoisQueryEdit := whoisGui.Add("ComboBox", "x34 y132 w420 h30 r8", whoisTargets)
+    whoisQueryEdit.SetFont("s12", "Segoe UI")
+    clearQueryButton := whoisGui.Add("Button", "x460 y132 w24 h30", "×")
+    clearQueryButton.SetFont("s10 bold", "Segoe UI")
+    clearQueryButton.OnEvent("Click", WhoisClearInput)
+    queryButton := whoisGui.Add("Button", "x490 y132 w126 h30 Default", "Abfragen")
+    queryButton.SetFont("s10 bold", "Segoe UI")
+    queryButton.OnEvent("Click", WhoisStartQuery)
+    cancelButton := whoisGui.Add("Button", "x624 y132 w62 h30", "Stopp")
+    cancelButton.OnEvent("Click", WhoisCancelQuery)
+    whoisGui.SetFont("s9 c65748B", "Segoe UI")
+    whoisStatusText := whoisGui.Add("Text", "x34 y166 w440 h20 +0x200", "Bereit. Direkte Abfrage über WHOIS-Server (TCP-Port 43).")
+    whoisProgress := whoisGui.Add("Progress", "x490 y171 w184 h6 Hidden +0x8", 0)
+
+    whoisGui.SetFont("s10 bold c344054", "Segoe UI")
+    whoisGui.Add("GroupBox", "x20 y198 w680 h208", "Übersicht")
+    whoisSummaryList := whoisGui.AddListView("x32 y220 w656 h174 -Multi +Grid", ["Angabe", "Wert"])
+    whoisSummaryList.ModifyCol(1, 170)
+    whoisSummaryList.ModifyCol(2, 460)
+
+    whoisGui.SetFont("s10 bold c344054", "Segoe UI")
+    whoisGui.Add("GroupBox", "x20 y416 w680 h150", "Vollständige WHOIS-Antwort")
+    whoisGui.SetFont("s9", "Segoe UI")
+    whoisRawEdit := whoisGui.Add("Edit", "x32 y438 w656 h116 ReadOnly Multi -HScroll +VScroll -Wrap", "")
+    whoisRawEdit.SetFont("s9", "Consolas")
+
+    whoisGui.OnEvent("Close", WhoisClose)
+    whoisGui.Show("w720 h585")
+    whoisGui.Move(setWindowPos(whoisGui), getWindowInfo(MeineGui).y)
+
+}
+
+WhoisClose(*) {
+    global whoisToolOpen
+    WhoisCancelQuery()
+    whoisToolOpen := false
+}
+
+WhoisClearInput(*) {
+    global whoisQueryEdit
+    whoisQueryEdit.Text := ""
+    whoisQueryEdit.Focus()
+}
+
+WhoisStartQuery(*) {
+    global whoisQueryEdit, whoisStatusText, whoisSummaryList, whoisRawEdit
+    global whoisQueryValue, whoisQueryKind, whoisQueryStage, whoisQueryGeneration
+    global whoisBusy, whoisProgress
+
+    query := Trim(whoisQueryEdit.Text)
+    query := RegExReplace(query, "i)^https?://", "")
+    query := RegExReplace(query, "[/#?].*$")
+    query := Trim(query, " `t`r`n.")
+    if (query = "") {
+        whoisStatusText.Text := "Bitte eine Domain oder IP-Adresse eingeben."
+        whoisQueryEdit.Focus()
+        return
+    }
+
+    if WhoisIsIPv4(query) || (InStr(query, ":") && RegExMatch(query, "^[0-9A-Fa-f:]+$")) {
+        whoisQueryKind := "IP"
+        server := "whois.arin.net"
+        whoisQueryValue := query
+    } else if RegExMatch(query, "i)^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$") {
+        whoisQueryKind := "Domain"
+        server := "whois.iana.org"
+        whoisQueryValue := StrLower(query)
+    } else {
+        whoisStatusText.Text := "Ungültige Eingabe. Bitte eine Domain oder IPv4-/IPv6-Adresse prüfen."
+        return
+    }
+
+    WhoisCancelQuery()
+    whoisQueryGeneration += 1
+    whoisQueryStage := 0
+    whoisBusy := true
+    SetToolWaitAnimation(whoisProgress, true)
+    whoisSummaryList.Delete()
+    whoisRawEdit.Value := ""
+    whoisStatusText.Text := "Verbinde mit " server " …"
+    SetTimer(WhoisConnectAndSend.Bind(server, whoisQueryValue, whoisQueryGeneration), -20)
+}
+
+WhoisIsIPv4(value) {
+    parts := StrSplit(value, ".")
+    if (parts.Length != 4)
+        return false
+    for part in parts {
+        if !(part ~= "^\d{1,3}$") || Integer(part) > 255
+            return false
+    }
+    return true
+}
+
+WhoisConnectAndSend(server, query, generation) {
+    global whoisSocket, whoisSocketChunks, whoisTimeoutCallback, whoisCurrentServer, whoisResponseBytes, whoisLastDataTick
+    global whoisStatusText, whoisQueryKind, whoisQueryGeneration
+
+    if (generation != whoisQueryGeneration)
+        return
+
+    try {
+        whoisSocket := Socket.Client(server, 43, Socket.TYPE.STREAM, Socket.IPPROTO.TCP)
+        whoisCurrentServer := server
+        whoisSocketChunks := []
+        whoisResponseBytes := 0
+        whoisLastDataTick := 0
+        if (StrLower(server) = "whois.denic.de")
+            wireQuery := "-T dn " query
+        else if (whoisQueryKind = "IP" && StrLower(server) = "whois.arin.net")
+            wireQuery := "n " query
+        else
+            wireQuery := query
+        whoisSocket.SendText(wireQuery "`r`n", "utf-8")
+        nonBlocking := 1
+        if DllCall("ws2_32\ioctlsocket", "Ptr", whoisSocket.Ptr, "UInt", 0x8004667E, "UInt*", &nonBlocking, "Int")
+            throw OSError(DllCall("ws2_32\WSAGetLastError", "Int"))
+        whoisStatusText.Text := "Abfrage bei " server " …"
+        whoisTimeoutCallback := WhoisTimeout.Bind(generation, server)
+        SetTimer(whoisTimeoutCallback, -15000)
+        SetTimer(WhoisPollSocket, 40)
+    } catch as err {
+        if WhoisTryRdapFallback(generation)
+            return
+        WhoisFinishError("Verbindung zu " server " fehlgeschlagen: " err.Message, generation)
+    }
+}
+
+WhoisPollSocket() {
+    global whoisSocket, whoisSocketChunks, whoisResponseBytes, whoisBusy, whoisQueryGeneration, whoisLastDataTick
+    if (!whoisBusy || !IsObject(whoisSocket)) {
+        SetTimer(WhoisPollSocket, 0)
+        return
+    }
+
+    readBuffer := Buffer(8192, 0)
+    loop 8 {
+        received := DllCall("ws2_32\recv", "Ptr", whoisSocket.Ptr, "Ptr", readBuffer.Ptr, "Int", readBuffer.Size, "Int", 0, "Int")
+        if (received > 0) {
+            chunk := Buffer(received, 0)
+            DllCall("RtlMoveMemory", "Ptr", chunk.Ptr, "Ptr", readBuffer.Ptr, "UPtr", received)
+            whoisSocketChunks.Push(chunk)
+            whoisResponseBytes += received
+            whoisLastDataTick := A_TickCount
+            if (whoisResponseBytes > 2097152) {
+                SetTimer(WhoisPollSocket, 0)
+                WhoisFinishError("Die WHOIS-Antwort überschreitet 2 MB.", whoisQueryGeneration)
+                return
+            }
+            continue
+        }
+        if (received = 0) {
+            SetTimer(WhoisPollSocket, 0)
+            WhoisHandleResponse(whoisQueryGeneration)
+            return
+        }
+        socketError := DllCall("ws2_32\WSAGetLastError", "Int")
+        if (socketError = 10035 || socketError = 10004) {
+            if (whoisResponseBytes && A_TickCount - whoisLastDataTick >= 500) {
+                SetTimer(WhoisPollSocket, 0)
+                WhoisHandleResponse(whoisQueryGeneration)
+            }
+            return
+        }
+        SetTimer(WhoisPollSocket, 0)
+        if WhoisTryRdapFallback(whoisQueryGeneration)
+            return
+        WhoisFinishError("WHOIS-Verbindung fehlgeschlagen (Winsock " socketError ").", whoisQueryGeneration)
+        return
+    }
+}
+
+WhoisHandleResponse(generation) {
+    global whoisSocketChunks, whoisTimeoutCallback, whoisQueryValue, whoisQueryStage
+    global whoisCurrentServer, whoisSocket, whoisStatusText, whoisQueryGeneration
+    if (generation != whoisQueryGeneration)
+        return
+    if IsObject(whoisTimeoutCallback)
+        SetTimer(whoisTimeoutCallback, 0)
+    response := WhoisChunksToText(whoisSocketChunks)
+    server := whoisCurrentServer
+    try whoisSocket.Close()
+    whoisSocket := 0
+    if (Trim(response) = "") {
+        if WhoisTryRdapFallback(generation)
+            return
+        WhoisFinishError("WHOIS-Port 43 und RDAP haben keine Daten zurückgegeben. Prüfe Internetverbindung oder Firewall.", generation)
+        return
+    }
+
+    ; DENIC ohne -T dn gibt nur Domain und Status (z. B. "connect") aus.
+    ; Das ist kein vollständiger Datensatz; dann RDAP als ergänzende Quelle versuchen.
+    if (StrLower(server) = "whois.denic.de" && WhoisIsDenicStatusOnly(response)) {
+        if WhoisTryRdapFallback(generation)
+            return
+    }
+
+    referral := WhoisFindReferral(response)
+    if (referral != "" && StrLower(referral) != StrLower(server) && whoisQueryStage < 2) {
+        whoisQueryStage += 1
+        whoisStatusText.Text := "Weiterleitung zu " referral " …"
+        WhoisConnectAndSend(referral, whoisQueryValue, generation)
+        return
+    }
+
+    WhoisShowResults(response, server, generation)
+}
+
+WhoisIsDenicStatusOnly(response) {
+    meaningfulLines := 0
+    for line in StrSplit(Trim(response), "`n") {
+        line := Trim(line, " `t`r`n")
+        if (line = "")
+            continue
+        if RegExMatch(line, "i)^Domain(?:-Ace)?:\s*.+$") || RegExMatch(line, "i)^Status:\s*connect$")
+            continue
+        meaningfulLines += 1
+    }
+    return meaningfulLines = 0
+}
+
+WhoisChunksToText(chunks) {
+    total := 0
+    for chunk in chunks
+        total += chunk.Size
+    if (total = 0)
+        return ""
+    joined := Buffer(total + 1, 0)
+    offset := 0
+    for chunk in chunks {
+        DllCall("RtlMoveMemory", "Ptr", joined.Ptr + offset, "Ptr", chunk.Ptr, "UPtr", chunk.Size)
+        offset += chunk.Size
+    }
+    return StrGet(joined, "UTF-8")
+}
+
+WhoisFindReferral(response) {
+    if RegExMatch(response, "im)^\s*(?:refer|whois|registrar whois server|whois server|referralserver)\s*:\s*(?:whois://)?([^\s]+)", &match) {
+        host := Trim(match[1], " `t`r`n")
+        if InStr(host, "://")
+            return ""
+        if (host ~= "i)^whois\.[a-z0-9.-]+$" || host ~= "i)^[a-z0-9.-]+\.whois\.[a-z0-9.-]+$")
+            return host
+        if (host ~= "i)^[a-z0-9.-]+$")
+            return host
+    }
+    return ""
+}
+
+WhoisTryRdapFallback(generation) {
+    global whoisQueryKind, whoisQueryValue, whoisStatusText, whoisQueryGeneration
+    global whoisTimeoutCallback, whoisSocket
+    if (generation != whoisQueryGeneration)
+        return false
+
+    if IsObject(whoisTimeoutCallback)
+        SetTimer(whoisTimeoutCallback, 0)
+    SetTimer(WhoisPollSocket, 0)
+    try whoisSocket.Close()
+    whoisSocket := 0
+    whoisStatusText.Text := "WHOIS-Port 43 antwortet nicht — versuche RDAP …"
+    try {
+        endpoint := whoisQueryKind = "IP" ? "ip/" : "domain/"
+        request := ComObject("WinHttp.WinHttpRequest.5.1")
+        request.SetTimeouts(5000, 5000, 5000, 12000)
+        request.Open("GET", "https://rdap.org/" endpoint whoisQueryValue, false)
+        request.SetRequestHeader("Accept", "application/rdap+json, application/json")
+        request.Send()
+        if (request.Status < 200 || request.Status >= 300 || Trim(request.ResponseText) = "")
+            return false
+
+        response := WhoisRdapToText(request.ResponseText)
+        if (Trim(response) = "")
+            return false
+        WhoisShowResults(response, "RDAP", generation)
+        return true
+    } catch {
+        return false
+    }
+}
+
+WhoisRdapToText(json) {
+    fields := Map(
+        "ldhName", "Domain Name", "unicodeName", "Domain Name", "handle", "Registry Domain ID",
+        "name", "Name", "country", "Country", "startAddress", "NetRange Start", "endAddress", "NetRange End",
+        "ipVersion", "IP Version", "port43", "WHOIS Server", "remarks", "Remarks",
+        "eventAction", "Event", "eventDate", "Date", "email", "Email", "tel", "Telephone",
+        "fn", "Contact", "org", "Organization", "street", "Address", "locality", "City",
+        "region", "State/Region", "postalCode", "Postal Code"
+    )
+    output := ""
+    for key, label in fields {
+        pattern := 'i)"' key '"\s*:\s*"((?:[^"\\]|\\.)*)"'
+        pos := 1
+        while RegExMatch(json, pattern, &match, pos) {
+            value := StrReplace(match[1], Chr(92) Chr(34), Chr(34))
+            value := StrReplace(value, Chr(92) "n", " ")
+            value := StrReplace(value, Chr(92) "r", " ")
+            if (value != "")
+                output .= label ": " value "`r`n"
+            pos := match.Pos + match.Len
+        }
+    }
+    return output
+}
+
+WhoisShowResults(response, server, generation) {
+    global whoisSummaryList, whoisRawEdit, whoisStatusText, whoisQueryValue, whoisQueryKind, whoisBusy, whoisQueryGeneration, whoisProgress
+    if (generation != whoisQueryGeneration)
+        return
+    whoisRawEdit.Value := Trim(response, "`r`n")
+    whoisSummaryList.Delete()
+
+    fields := Map(
+        "domain name", "Domain", "registry domain id", "Registry-ID", "registrar", "Registrar",
+        "registrar whois server", "WHOIS-Server", "registrant organization", "Organisation",
+        "name", "Name", "netrange start", "IP-Bereich Start", "netrange end", "IP-Bereich Ende",
+        "ip version", "IP-Version", "event", "Ereignis", "date", "Datum", "email", "E-Mail",
+        "telephone", "Telefon", "contact", "Kontakt", "state/region", "Region",
+        "registrant country", "Land", "netname", "Netzwerk", "orgname", "Organisation",
+        "orgid", "Organisation-ID", "netrange", "IP-Bereich", "cidr", "CIDR",
+        "country", "Land", "creation date", "Erstellt", "created", "Erstellt",
+        "updated date", "Aktualisiert", "last updated", "Aktualisiert",
+        "registry expiry date", "Läuft ab", "expiration date", "Läuft ab",
+        "name server", "Nameserver", "nserver", "Nameserver", "domain status", "Status",
+        "status", "Status", "organization", "Organisation", "address", "Adresse",
+        "city", "Ort", "state/province", "Region", "postal code", "PLZ",
+        "abuse contact email", "Abuse-Kontakt", "originas", "Ursprungs-AS"
+    )
+    seen := Map()
+    for line in StrSplit(response, "`n") {
+        if RegExMatch(line, "^\s*([^:#]+?)\s*:\s*(.*?)\s*$", &match) {
+            rawKey := Trim(match[1])
+            rawValue := Trim(match[2])
+            if (rawValue = "")
+                continue
+            normalized := StrLower(rawKey)
+            if fields.Has(normalized) {
+                label := fields[normalized]
+                key := label "|" rawValue
+                if !seen.Has(key) {
+                    whoisSummaryList.Add(, label, rawValue)
+                    seen[key] := true
+                }
+            }
+        }
+    }
+    if (whoisSummaryList.GetCount() = 0)
+        whoisSummaryList.Add(, "Abfrage", "Keine bekannten Felder erkannt; vollständige Antwort unten.")
+    whoisSummaryList.ModifyCol(1, 170)
+    whoisSummaryList.ModifyCol(2, 460)
+    whoisBusy := false
+    SetToolWaitAnimation(whoisProgress, false)
+    whoisStatusText.Text := whoisQueryKind " " whoisQueryValue " — Antwort von " server "."
+}
+
+WhoisTimeout(generation, server) {
+    if !WhoisTryRdapFallback(generation)
+        WhoisFinishError("Zeitüberschreitung bei " server ". WHOIS-Port 43 und RDAP sind nicht erreichbar.", generation)
+}
+
+WhoisFinishError(message, generation) {
+    global whoisQueryGeneration, whoisBusy, whoisSocket, whoisTimeoutCallback, whoisStatusText, whoisProgress
+    if (generation != whoisQueryGeneration)
+        return
+    whoisBusy := false
+    if IsObject(whoisTimeoutCallback)
+        SetTimer(whoisTimeoutCallback, 0)
+    whoisQueryGeneration += 1
+    try whoisSocket.Close()
+    whoisSocket := 0
+    SetTimer(WhoisPollSocket, 0)
+    SetToolWaitAnimation(whoisProgress, false)
+    whoisStatusText.Text := message
+}
+
+WhoisCancelQuery(*) {
+    global whoisQueryGeneration, whoisBusy, whoisSocket, whoisTimeoutCallback, whoisStatusText, whoisProgress
+    whoisQueryGeneration += 1
+    whoisBusy := false
+    if IsObject(whoisTimeoutCallback)
+        SetTimer(whoisTimeoutCallback, 0)
+    try whoisSocket.Close()
+    whoisSocket := 0
+    SetTimer(WhoisPollSocket, 0)
+    SetToolWaitAnimation(whoisProgress, false)
+    if IsSet(whoisStatusText) && IsObject(whoisStatusText)
+        whoisStatusText.Text := "Abfrage abgebrochen."
+}
+; --- Ende: Tool_Whois.ahk ---
 
 buttonKlick(btn) {
     switch (btn) {
@@ -48890,15 +49896,17 @@ buttonKlick(btn) {
         case 21:
             öffneLancomDownloader()
 
+        case 22:
+            öffneWlanQrCode()
+
+        case 23:
+            öffneWhois()
+
         default:
     }
 }
-
-
-; ===== Ende: Tab_Tools.ahk =====
-
-
-; ===== Eingebunden aus: Tab_Notizen.ahk =====
+; --- Ende: Tab_Tools.ahk ---
+; --- Beginn: Tab_Notizen.ahk ---
 ; Logik für den Reiter „Notizen“.
 loadNotiz() {
     global notizFeld
@@ -48942,30 +49950,41 @@ saveNotiz(*) {
     SaveAppDataLines(cleaned)
     infoSavedNotiz.Text := "gespeichert"
 }
-
-
-; ===== Ende: Tab_Notizen.ahk =====
-
-
-; ===== Eingebunden aus: Tab_About.ahk =====
+; --- Ende: Tab_Notizen.ahk ---
+; --- Beginn: Tab_About.ahk ---
 ; Der Reiter „About“ enthält nur statische GUI-Elemente.
 ; Seine Steuerelemente und die Tab-Wechselanzeige stehen in IP-App.ahk.
-
-
-; ===== Ende: Tab_About.ahk =====
-
+; --- Ende: Tab_About.ahk ---
 
 ; Hauptdatei: GUI-Aufbau, Tab-Steuerung, Ereignisverknüpfungen und Startablauf.
 ; Haupt-GUI mit Tabs erstellt
 MeineGui := Gui(, "Netzwerk Tools " version)
-ApplyLightAppTheme(MeineGui, 11)
+ApplyLightAppTheme(MeineGui, 10)
+
+; Schriftgrößen der alten Haupt-GUI für diese Controls übernehmen.
+; Die Werte werden nach dem Aufbau zurückgesetzt, damit Werkzeugfenster
+; weiterhin ihre eigenen, kompakteren Schriftgrößen verwenden.
+mainGuiSavedFonts := Map(
+    "fontExtraSmall", fontExtraSmall, "fontSmall", fontSmall, "fontSmallB", fontSmallB,
+    "fontBigSmall", fontBigSmall, "fontBigSmallB", fontBigSmallB,
+    "fontMedium", fontMedium, "fontMediumB", fontMediumB, "fontBig", fontBig, "fontBigB", fontBigB
+)
+fontExtraSmall := "s8"
+fontSmall := "s10"
+fontSmallB := "s10 bold"
+fontBigSmall := "s12"
+fontBigSmallB := "s12 bold"
+fontMedium := "s14"
+fontMediumB := "s14 bold"
+fontBig := "s18"
+fontBigB := "s18 bold"
 
 SB := MeineGui.Add("StatusBar", , "Starttext der Leiste (kann leer gelassen werden).")
 SB.SetText(" Netzwerkkarten - Profile -> Doppelklick lädt Profil")
 TraySetIcon "Shell32.dll", 19
 
 ; Tab-Control hinzufügen
-TabControl := MeineGui.Add("Tab3", "w460 h425", ["Netzwerkkarten", "ext. IP", "Erreichbarkeit", "Netzwerk", "Windows", "Notizen", "About"])
+TabControl := MeineGui.Add("Tab3", "w460 h390", ["Netzwerkkarten", "ext. IP", "Erreichbarkeit", "Netzwerk", "Windows", "Notizen", "About"])
 TabControl.SetFont("s8", "Segoe UI")
 
 
@@ -48973,35 +49992,35 @@ TabControl.SetFont("s8", "Segoe UI")
 TabControl.UseTab(1)
 
 ; Titel und Profile
-lblTitel := MeineGui.Add("Text", "x20 y65 w290 h30", "Verfügbare Netzwerkkarten")
+lblTitel := MeineGui.Add("Text", "x20 y55 w290 h30", "Verfügbare Netzwerkkarten")
 lblTitel.SetFont(fontMediumB, sa)
-NetzwerkDDL := MeineGui.Add("DropDownList", "x20 y100 w200 vNetzwerkKarte Choose1")
-lblProfil := MeineGui.Add("Text", "x320 y65 w130 h30", "Profile")
+NetzwerkDDL := MeineGui.Add("DropDownList", "x20 y90 w200 vNetzwerkKarte Choose1")
+lblProfil := MeineGui.Add("Text", "x320 y55 w130 h30", "Profile")
 lblProfil.SetFont(fontMediumB, sa)
 
 ; Textbox und Inputbox für die Details
-lblNetzwerkConfig := MeineGui.Add("Text", "x20 y140 w280 h30", "Netzwerkkarten Konfiguration")
+lblNetzwerkConfig := MeineGui.Add("Text", "x20 y120 w280 h30", "Netzwerkkarten Konfiguration")
 lblNetzwerkConfig.SetFont(fontMediumB, sa)
 
-chbDHCP := MeineGui.Add("Checkbox", "x50 y175 w125 h24", "DHCP aktiviert")
+chbDHCP := MeineGui.Add("Checkbox", "x50 y155 w125 h24", "DHCP aktiviert")
 chbDHCP.SetFont("s10", "Segoe UI")
 
-txtVLAN := MeineGui.Add("Text", "x175 y175 w60 h20", "VLAN-ID:")
-txtIP := MeineGui.Add("Text", "x20 y210 w115 h20 Right", "IP-Adresse")
-txtSubnetz := MeineGui.Add("Text", "x20 y245 w115 h20 Right", "Subnetzmaske")
-txtGateway := MeineGui.Add("Text", "x20 y280 w115 h20 Right", "Gateway")
-txtDNS := MeineGui.Add("Text", "x20 y313 w115 h20 Right", "DNS-Server")
+txtVLAN := MeineGui.Add("Text", "x175 y155 w60 h20", "VLAN-ID:")
+txtIP := MeineGui.Add("Text", "x20 y193 w115 h20 Right", "IP-Adresse")
+txtSubnetz := MeineGui.Add("Text", "x20 y231 w115 h20 Right", "Subnetzmaske")
+txtGateway := MeineGui.Add("Text", "x20 y269 w115 h20 Right", "Gateway")
+txtDNS := MeineGui.Add("Text", "x20 y307 w115 h20 Right", "DNS-Server")
 
 txtIP.SetFont(fontBigSmall, sa)
 txtSubnetz.SetFont(fontBigSmall, sa)
 txtGateway.SetFont(fontBigSmall, sa)
 txtDNS.SetFont(fontBigSmall, sa)
 
-frmVLAN := MeineGui.Add("Edit", "x240 y170 w60 h30 Center Number Multi -VScroll -Wrap", "")
-frmIP := MeineGui.Add("Edit", "x150 y205 w150 h30 Disabled Multi -VScroll -Wrap", "")
-frmSubnetz := MeineGui.Add("Edit", "x150 y240 w150 h30 Disabled Multi -VScroll -Wrap", "")
-frmGateway := MeineGui.Add("Edit", "x150 y275 w150 h30 Disabled Multi -VScroll -Wrap", "")
-frmDNS := MeineGui.Add("Edit", "x150 y310 w150 h30 Disabled Multi -VScroll -Wrap", "")
+frmVLAN := MeineGui.Add("Edit", "x240 y150 w60 h30 Center Number Multi -VScroll -Wrap", "")
+frmIP := MeineGui.Add("Edit", "x150 y188 w150 h30 Disabled Multi -VScroll -Wrap", "")
+frmSubnetz := MeineGui.Add("Edit", "x150 y226 w150 h30 Disabled Multi -VScroll -Wrap", "")
+frmGateway := MeineGui.Add("Edit", "x150 y264 w150 h30 Disabled Multi -VScroll -Wrap", "")
+frmDNS := MeineGui.Add("Edit", "x150 y302 w150 h30 Disabled Multi -VScroll -Wrap", "")
 
 frmVLAN.SetFont(fontMedium, sa)
 frmIP.SetFont(fontMedium, sa)
@@ -49010,59 +50029,59 @@ frmGateway.SetFont(fontMedium, sa)
 frmDNS.SetFont(fontMedium, sa)
 
 ; Buttons für Tab 1
-AktualisierenBtn := MeineGui.Add("Button", "x230 y100 w70 h25", "Reload")
-ÜbernehmenBtn := MeineGui.Add("Button", "x70 y355 w200 h50", "Übernehmen")
+AktualisierenBtn := MeineGui.Add("Button", "x230 y90 w70 h25", "Reload")
+ÜbernehmenBtn := MeineGui.Add("Button", "x70 y342 w200 h50", "Übernehmen")
 ÜbernehmenBtn.SetFont(fontBigB, sa)
 
 ; Profile Section
-ProfilList := MeineGui.Add("Listbox", "x320 y100 w140 h255")
+ProfilList := MeineGui.Add("Listbox", "x320 y90 w140 h265")
 ProfilList.SetFont(fontBigSmallB, sa)
-ProfilListInfo := MeineGui.Add("Text", "x320 y385 w140 h30", "💡 Rechtsklick auf einen Eintrag öffnet das Menü")
+ProfilListInfo := MeineGui.Add("Text", "x320 y360 w140 h30", "💡 Rechtsklick auf einen Eintrag öffnet das Menü")
 ProfilListInfo.SetFont(fontExtraSmall, sa)
 
-; ProfilBtnSave := MeineGui.Add("Button", "x320 y355 w130 h25 Disabled", "Speichern")
-; ProfilBtnSaveAs := MeineGui.Add("Button", "x320 y385 w130 h25", "Speichern unter")
-; ProfilBtn3 := MeineGui.Add("Button", "x320 y385 w60 h22", "Vlan 0")
-; ProfilBtn4 := MeineGui.Add("Button", "x390 y385 w60 h22", "Vlan R")
+; ProfilBtnSave := MeineGui.Add("Button", "x320 y330 w130 h25 Disabled", "Speichern")
+; ProfilBtnSaveAs := MeineGui.Add("Button", "x320 y360 w130 h25", "Speichern unter")
+; ProfilBtn3 := MeineGui.Add("Button", "x320 y360 w60 h22", "Vlan 0")
+; ProfilBtn4 := MeineGui.Add("Button", "x390 y360 w60 h22", "Vlan R")
 
 ; ===== TAB 2: Öffentliche IP =====
 TabControl.UseTab(2)
 
 ; IP-Anzeige und Aktualisieren-Button
-EditExterneIP := MeineGui.Add("Edit", "x65 y65 w150 h30 Center Multi -VScroll -Wrap", "")
-EditExterneIP.SetFont(fontBigB, sa)
-btnÖffentlicheIP := MeineGui.Add("Button", "x280 y65 w120 h30", "Aktualisieren")
+EditExterneIP := MeineGui.Add("Edit", "x65 y60 w150 h30 Center Multi -VScroll -Wrap", "")
+EditExterneIP.SetFont(fontMediumB, sa)
+btnÖffentlicheIP := MeineGui.Add("Button", "x280 y60 w120 h30", "Aktualisieren")
 btnÖffentlicheIP.SetFont(fontSmall, sa)
 
 ; Geolocation Tabelle
-gbGeolocation := MeineGui.Add("GroupBox", "x35 y125 w410 h240", "Geolocation Daten")
+gbGeolocation := MeineGui.Add("GroupBox", "x35 y120 w410 h220", "Geolocation Daten")
 
 ; Tabelle mit Beschriftungen und Werten
 ; Erste Spalte: Beschriftungen
-MeineGui.Add("Text", "x45 y175 w80 h30", "Land:").SetFont(fontMediumB, sa)
-MeineGui.Add("Text", "x45 y210 w80 h30", "Region:").SetFont(fontMediumB, sa)
-MeineGui.Add("Text", "x45 y245 w80 h30", "PLZ:").SetFont(fontMediumB, sa)
-MeineGui.Add("Text", "x45 y280 w80 h30", "Stadt:").SetFont(fontMediumB, sa)
-MeineGui.Add("Text", "x45 y315 w80 h30", "ISP:").SetFont(fontMediumB, sa)
+MeineGui.Add("Text", "x45 y150 w80 h30", "Land:").SetFont(fontMediumB, sa)
+MeineGui.Add("Text", "x45 y185 w80 h30", "Region:").SetFont(fontMediumB, sa)
+MeineGui.Add("Text", "x45 y220 w80 h30", "PLZ:").SetFont(fontMediumB, sa)
+MeineGui.Add("Text", "x45 y255 w80 h30", "Stadt:").SetFont(fontMediumB, sa)
+MeineGui.Add("Text", "x45 y290 w80 h30", "ISP:").SetFont(fontMediumB, sa)
 
 ; Zweite Spalte: Werte (Edit-Felder, die nur zur Anzeige dienen)
-EditLand := MeineGui.Add("Edit", "x130 y175 w300 h30 Multi -VScroll -Wrap", "")
+EditLand := MeineGui.Add("Edit", "x130 y150 w300 h30 Multi -VScroll -Wrap", "")
 EditLand.SetFont(fontMediumB, sa)
 EditLand.Enabled := false  ; Read-only
 
-EditRegion := MeineGui.Add("Edit", "x130 y210 w300 h30 Multi -VScroll -Wrap", "")
+EditRegion := MeineGui.Add("Edit", "x130 y185 w300 h30 Multi -VScroll -Wrap", "")
 EditRegion.SetFont(fontMediumB, sa)
 EditRegion.Enabled := false  ; Read-only
 
-EditPLZ := MeineGui.Add("Edit", "x130 y245 w300 h30 Multi -VScroll -Wrap", "")
+EditPLZ := MeineGui.Add("Edit", "x130 y220 w300 h30 Multi -VScroll -Wrap", "")
 EditPLZ.SetFont(fontMediumB, sa)
 EditPLZ.Enabled := false  ; Read-only
 
-EditStadt := MeineGui.Add("Edit", "x130 y280 w300 h30 Multi -VScroll -Wrap", "")
+EditStadt := MeineGui.Add("Edit", "x130 y255 w300 h30 Multi -VScroll -Wrap", "")
 EditStadt.SetFont(fontMediumB, sa)
 EditStadt.Enabled := false  ; Read-only
 
-EditISP := MeineGui.Add("Edit", "x130 y315 w300 h30 Multi -VScroll -Wrap", "")
+EditISP := MeineGui.Add("Edit", "x130 y290 w300 h30 Multi -VScroll -Wrap", "")
 EditISP.SetFont(fontMediumB, sa)
 EditISP.Enabled := false  ; Read-only
 
@@ -49070,8 +50089,8 @@ EditISP.Enabled := false  ; Read-only
 TabControl.UseTab(3)
 
 ; Erreichbarkeit Section
-gbErreichbarkeit := MeineGui.Add("GroupBox", "x20 y65 w430 h180", "Erreichbarkeit")
-DropDownIP := MeineGui.Add("DropDownList", "x50 y95 w370 r16 Center")
+gbErreichbarkeit := MeineGui.Add("GroupBox", "x20 y55 w430 h180", "Erreichbarkeit")
+DropDownIP := MeineGui.Add("DropDownList", "x50 y85 w370 r16 Center")
 DropDownIP.SetFont(fontMedium, sa)
 
 for ziel in pingZiele {
@@ -49081,135 +50100,146 @@ for ziel in pingZiele {
 
 DropDownIP.Value := 1
 
-EditZiel := MeineGui.Add("Edit", "x50 y145 w330 h30 Multi -VScroll -Wrap")
+EditZiel := MeineGui.Add("Edit", "x50 y135 w330 h30 Multi -VScroll -Wrap")
 EditZiel.SetFont(fontMediumB, sa)
 EditZiel.Value := pingZiele[1][1]
 
-BtnInsertZiel := MeineGui.Add("Button", "x390 y145 w30 h30", "📋")
+BtnInsertZiel := MeineGui.Add("Button", "x390 y135 w30 h30", "📋")
 BtnInsertZiel.OnEvent("Click", BtnInsertZielClick)
 
-pingbutton := MeineGui.Add("Button", "x50 y195 w180 h36", "Ping")
+pingbutton := MeineGui.Add("Button", "x50 y185 w180 h36", "Ping")
 pingbutton.SetFont(fontMediumB, sa)
 
-tracertButton := MeineGui.Add("Button", "x240 y195 w180 h36", "Tracert")
+tracertButton := MeineGui.Add("Button", "x240 y185 w180 h36", "Tracert")
 tracertButton.SetFont(fontMediumB, sa)
 
 
-tncGB := MeineGui.Add("GroupBox", "x20 y255 w430 h80", "TestNet-Connection")
+tncGB := MeineGui.Add("GroupBox", "x20 y245 w430 h80", "TestNet-Connection")
 
-tncButton := MeineGui.Add("Button", "x50 y280 w180 h36", "tnc")
+tncButton := MeineGui.Add("Button", "x50 y270 w180 h36", "tnc")
 tncButton.SetFont(fontMediumB, sa)
 
-tncPortLabel := MeineGui.Add("Text", "x260 y285 w50 h30", "Port:")
+tncPortLabel := MeineGui.Add("Text", "x260 y275 w50 h30", "Port:")
 tncPortLabel.SetFont(fontMediumB, sa)
 
-tncPortEdit := MeineGui.Add("Edit", "x320 y285 w60 h30 Multi -VScroll -Wrap", "443")
+tncPortEdit := MeineGui.Add("Edit", "x320 y275 w60 h30 Multi -VScroll -Wrap", "443")
 tncPortEdit.SetFont(fontMediumB, sa)
 
 ; Aktuelle Netzwerkinfo
-gbAktuell := MeineGui.Add("GroupBox", "x20 y355 w430 h60", "Aktuelle Netzwerkkarte")
+gbAktuell := MeineGui.Add("GroupBox", "x20 y330 w430 h60", "Aktuelle Netzwerkkarte")
 
-lblAktuelleKarte := MeineGui.Add("Text", "x30 y383 w250 h20", "Keine Netzwerkkarte ausgewählt")
+lblAktuelleKarte := MeineGui.Add("Text", "x30 y360 w250 h20", "Keine Netzwerkkarte ausgewählt")
 lblAktuelleKarte.SetFont(fontSmallB, sa)
-lblAktuelleIP := MeineGui.Add("Text", "x260 y383 w150 h20", "IP: -")
+lblAktuelleIP := MeineGui.Add("Text", "x260 y360 w150 h20", "IP: -")
 
 ; ===== TAB 4: Netzwerkfunktionen =====
 TabControl.UseTab(4)
 
-MeineGui.Add("GroupBox", "x20 y65 w430 h345", "Netzwerkfunktionen")
+MeineGui.Add("GroupBox", "x20 y55 w430 h335", "Netzwerkfunktionen")
 
-btn1 := MeineGui.Add("Button", "x35 y90 w185 h30", "Browser-Internet-Speedtest")
+btn1 := MeineGui.Add("Button", "x35 y85 w185 h30", "Browser-Internet-Speedtest")
 btn1.SetFont(fontSmall, sa)
 
-btn2 := MeineGui.Add("Button", "x35 y134 w185 h30", "Port erreichbar")
+btn2 := MeineGui.Add("Button", "x35 y125 w185 h30", "Port erreichbar")
 btn2.SetFont(fontSmall, sa)
 
-btn3 := MeineGui.Add("Button", "x35 y178 w185 h30", "IP Scanner")
+btn3 := MeineGui.Add("Button", "x35 y165 w185 h30", "IP Scanner")
 btn3.SetFont(fontSmall, sa)
 
-btn4 := MeineGui.Add("Button", "x35 y222 w185 h30", "Port Scanner")
+btn4 := MeineGui.Add("Button", "x35 y205 w185 h30", "Port Scanner")
 btn4.SetFont(fontSmall, sa)
 
-btn5 := MeineGui.Add("Button", "x35 y266 w185 h30", "DNS-Abfrage (ANY)")
+btn5 := MeineGui.Add("Button", "x35 y245 w185 h30", "DNS-Abfrage (ANY)")
 btn5.SetFont(fontSmall, sa)
 
-btn6 := MeineGui.Add("Button", "x35 y310 w185 h30", "Verbindungsmonitor")
+btn6 := MeineGui.Add("Button", "x35 y285 w185 h30", "Verbindungsmonitor")
 btn6.SetFont(fontSmall, sa)
 
-btn7 := MeineGui.Add("Button", "x35 y354 w185 h30", "DNS NAPTR-SRV-Abfrage")
+btn7 := MeineGui.Add("Button", "x35 y325 w185 h30", "DNS NAPTR-SRV-Abfrage")
 btn7.SetFont(fontSmall, sa)
 
-btn14 := MeineGui.Add("Button", "x245 y90 w190 h30", "Subnetz-Rechner")
+btn14 := MeineGui.Add("Button", "x245 y85 w190 h30", "Subnetz-Rechner")
 btn14.SetFont(fontSmall, sa)
 
-btn15 := MeineGui.Add("Button", "x245 y134 w190 h30", "Passwort-Generator")
+btn15 := MeineGui.Add("Button", "x245 y125 w190 h30", "Passwort-Generator")
 btn15.SetFont(fontSmall, sa)
 
-btn20 := MeineGui.Add("Button", "x245 y178 w190 h30", "FRITZ!Box Firmware")
+btn20 := MeineGui.Add("Button", "x245 y165 w190 h30", "FRITZ!Box Firmware")
 btn20.SetFont(fontSmall, sa)
-btn21 := MeineGui.Add("Button", "x245 y222 w190 h30", "LANCOM Firmware")
+btn21 := MeineGui.Add("Button", "x245 y205 w190 h30", "LANCOM Firmware")
 btn21.SetFont(fontSmall, sa)
-platzhalterNetzwerk3 := MeineGui.Add("Button", "x245 y266 w190 h30", "")
-platzhalterNetzwerk3.Enabled := false
-platzhalterNetzwerk4 := MeineGui.Add("Button", "x245 y310 w190 h30", "")
-platzhalterNetzwerk4.Enabled := false
-platzhalterNetzwerk5 := MeineGui.Add("Button", "x245 y354 w190 h30", "")
+btn22 := MeineGui.Add("Button", "x245 y245 w190 h30", "WLAN-QR-Code")
+btn22.SetFont(fontSmall, sa)
+btn23 := MeineGui.Add("Button", "x245 y285 w190 h30", "WHOIS-Abfrage")
+btn23.SetFont(fontSmall, sa)
+platzhalterNetzwerk5 := MeineGui.Add("Button", "x245 y325 w190 h30", "")
 platzhalterNetzwerk5.Enabled := false
 
 
 ; ===== TAB 5: Windows-Verknüpfungen =====
 TabControl.UseTab(5)
-MeineGui.Add("GroupBox", "x20 y65 w430 h345", "Windows-Funktionen")
+MeineGui.Add("GroupBox", "x20 y55 w430 h335", "Windows-Funktionen")
 
-btn8 := MeineGui.Add("Button", "x35 y90 w185 h30", "Netzwerk und Internet")
+btn8 := MeineGui.Add("Button", "x35 y85 w185 h30", "Netzwerk und Internet")
 btn8.SetFont(fontSmall, sa)
 
-btn9 := MeineGui.Add("Button", "x35 y134 w185 h30", "Taskmanager")
+btn9 := MeineGui.Add("Button", "x35 y125 w185 h30", "Taskmanager")
 btn9.SetFont(fontSmall, sa)
 
-btn10 := MeineGui.Add("Button", "x35 y178 w185 h30", "Dienste")
+btn10 := MeineGui.Add("Button", "x35 y165 w185 h30", "Dienste")
 btn10.SetFont(fontSmall, sa)
 
-btn11 := MeineGui.Add("Button", "x35 y222 w185 h30", "Geräte-Manager")
+btn11 := MeineGui.Add("Button", "x35 y205 w185 h30", "Geräte-Manager")
 btn11.SetFont(fontSmall, sa)
 
-btn12 := MeineGui.Add("Button", "x35 y266 w185 h30", "Firewall")
+btn12 := MeineGui.Add("Button", "x35 y245 w185 h30", "Firewall")
 btn12.SetFont(fontSmall, sa)
 
-btn13 := MeineGui.Add("Button", "x245 y90 w190 h30", "Netzwerkverbindungen")
+btn13 := MeineGui.Add("Button", "x245 y85 w190 h30", "Netzwerkverbindungen")
 btn13.SetFont(fontSmall, sa)
 
-btn16 := MeineGui.Add("Button", "x245 y134 w190 h30", "Ereignisanzeige")
+btn16 := MeineGui.Add("Button", "x245 y125 w190 h30", "Ereignisanzeige")
 btn16.SetFont(fontSmall, sa)
 
-btn17 := MeineGui.Add("Button", "x245 y178 w190 h30", "Systeminformationen")
+btn17 := MeineGui.Add("Button", "x245 y165 w190 h30", "Systeminformationen")
 btn17.SetFont(fontSmall, sa)
 
-btn18 := MeineGui.Add("Button", "x245 y222 w190 h30", "Ressourcenmonitor")
+btn18 := MeineGui.Add("Button", "x245 y205 w190 h30", "Ressourcenmonitor")
 btn18.SetFont(fontSmall, sa)
 
-btn19 := MeineGui.Add("Button", "x245 y266 w190 h30", "Datenträgerverwaltung")
+btn19 := MeineGui.Add("Button", "x245 y245 w190 h30", "Datenträgerverwaltung")
 btn19.SetFont(fontSmall, sa)
 
 ; ===== TAB 6: Notiz =====
 TabControl.UseTab(6)
-notizFeld := MeineGui.Add("Edit", "x20 y65 w430 h300",)
-btnSaveNotiz := MeineGui.Add("Button", "x20 y380", "Speichern")
-infoSavedNotiz := MeineGui.Add("Text", "x120 y385 w200", "")
+notizFeld := MeineGui.Add("Edit", "x20 y55 w430 h300",)
+btnSaveNotiz := MeineGui.Add("Button", "x20 y360", "Speichern")
+infoSavedNotiz := MeineGui.Add("Text", "x120 y365 w200", "")
 
 
 ; ===== TAB 7: About =====
 TabControl.UseTab(7)
 ; Info Section
-gbInfo := MeineGui.Add("GroupBox", "x20 y65 w430 h320", "Informationen")
-MeineGui.Add("Text", "x35 y95 w400 h20", "Netzwerktools " version)
+gbInfo := MeineGui.Add("GroupBox", "x20 y55 w430 h320", "Informationen")
+MeineGui.Add("Text", "x35 y85 w400 h20", "Netzwerktools " version)
 MeineGui.Add("Text", "x35 y+25 w400 h20", "")
 MeineGui.Add("Text", "x35 y+25 w400 h20", "Erstellt von mir")
 MeineGui.Add("Text", "x35 y+15 w400 h20", "-")
 MeineGui.Add("Link", "x35 y+15 w400 h20", '-')
-;MeineGui.Add("Text", "x35 y170 w400 h20", "Verwendete Technologien: AutoHotkey v2")
+;MeineGui.Add("Text", "x35 y145 w400 h20", "Verwendete Technologien: AutoHotkey v2")
 ; ===== ALLGEMEINE ELEMENTE (außerhalb der Tabs) =====
 TabControl.UseTab()  ; Zurück zur Haupt-GUI
+
+; Gemeinsame Schriftgrößen für Tool-Fenster wiederherstellen.
+fontExtraSmall := mainGuiSavedFonts["fontExtraSmall"]
+fontSmall := mainGuiSavedFonts["fontSmall"]
+fontSmallB := mainGuiSavedFonts["fontSmallB"]
+fontBigSmall := mainGuiSavedFonts["fontBigSmall"]
+fontBigSmallB := mainGuiSavedFonts["fontBigSmallB"]
+fontMedium := mainGuiSavedFonts["fontMedium"]
+fontMediumB := mainGuiSavedFonts["fontMediumB"]
+fontBig := mainGuiSavedFonts["fontBig"]
+fontBigB := mainGuiSavedFonts["fontBigB"]
 
 ; Event-Handler
 AktualisierenBtn.OnEvent("Click", NetzwerkKartenAktualisieren)
@@ -49245,6 +50275,8 @@ btn18.OnEvent("Click", (*) => buttonKlick(18))
 btn19.OnEvent("Click", (*) => buttonKlick(19))
 btn20.OnEvent("Click", (*) => buttonKlick(20))
 btn21.OnEvent("Click", (*) => buttonKlick(21))
+btn22.OnEvent("Click", (*) => buttonKlick(22))
+btn23.OnEvent("Click", (*) => buttonKlick(23))
 pingbutton.OnEvent("Click", pingButtonFunktion)
 tracertButton.OnEvent("Click", tracertButtonFunktion)
 DropDownIP.OnEvent("Change", DropDownIPChanged)
@@ -49260,8 +50292,6 @@ TabControl.OnEvent("Change", TabChanged)
 ; Funktion, die aufgerufen wird, wenn der Tab gewechselt wird
 TabChanged(Ctrl, Info) {
     global SB
-    if (Ctrl.Value = 1)
-        BringeNetzwerkKopfzeilenNachVorn()
     switch (Ctrl.Text) {
 
         case "Netzwerkkarten":
@@ -49297,21 +50327,13 @@ löscheLeereZeilen()
 loadNotiz()
 
 ; GUI anzeigen
-MeineGui.Show("Center")
+MeineGui.Show("w480 h425 Center")
 ; MeineGui.Show("w480 h415 Center")
 for control in [frmVLAN, frmIP, frmSubnetz, frmGateway, frmDNS, EditExterneIP, EditLand, EditRegion, EditPLZ, EditStadt, EditISP, EditZiel, tncPortEdit]
     CenterModernEdit(control, 20)
 MeineGui.Move(1000, 100)
-BringeNetzwerkKopfzeilenNachVorn()
 SetTimer(NetzwerkKartenAktualisieren, -100)
 
-BringeNetzwerkKopfzeilenNachVorn() {
-    global lblTitel, lblProfil
-    for ctrl in [lblTitel, lblProfil] {
-        DllCall("SetWindowPos", "Ptr", ctrl.Hwnd, "Ptr", 0, "Int", 0, "Int", 0, "Int", 0, "Int", 0, "UInt", 0x13)
-        DllCall("RedrawWindow", "Ptr", ctrl.Hwnd, "Ptr", 0, "Ptr", 0, "UInt", 0x85)
-    }
-}
 
 
 ; ===== FUNKTIONEN =====
